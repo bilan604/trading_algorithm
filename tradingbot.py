@@ -13,11 +13,12 @@ import joblib
 class TradingBot(object):
     def __init__(self, df_name, REG, \
                  CUTOFF_LOWER=1.2, CUTOFF_UPPER=100, \
-                 SLPERC=0.04, TPPERC=0.06, \
+                 SLPERC=0.04, TPPERC=0.04, \
                  NP_CUTOFF_PCT=0.8, \
                  window_sizes=[1, 3, 9, 15, 30, 60, 120, 240, 480, 960],
                  shorts=False):
         
+        self.name = "XGBBot"
         self.CUTOFF_LOWER = CUTOFF_LOWER
         self.CUTOFF_UPPER = CUTOFF_UPPER
 
@@ -48,6 +49,7 @@ class TradingBot(object):
         self.STD_DEV = None
 
         self.shorts = shorts # whether it takes short positions
+        self.current_position = []  # for manual testing
 
         self.initialize()
 
@@ -71,19 +73,23 @@ class TradingBot(object):
     
     def get_moving_averages(self, df, normalize=True):
         mtx = [[0] * len(self.window_sizes) for _ in range(len(df))]
-        for i in range(len(df)):
-            for j in range(len(self.window_sizes)):
-                if i-self.window_sizes[j]+1 < 0:
-                    moving_average = sum(df['Close'][:self.window_sizes[j]+1]) / (i+1)
+        for j in range(len(self.window_sizes)):
+            window_sum = 0
+            for i in range(len(df)):
+                if i < self.window_sizes[j]:
+                    window_sum += df['Close'][i]
+                    moving_average = window_sum / (i+1)
                 else:
-                    moving_average = sum([df['Close'][k] for k in range(i-self.window_sizes[j]+1, i+1)]) / self.window_sizes[j]
+                    window_sum += df['Close'][i]
+                    window_sum -= df['Close'][i-self.window_sizes[j]]
+                    moving_average = window_sum / self.window_sizes[j]
                 
                 # normalization
                 if normalize:
                     moving_average = moving_average / df['Close'][i]
                 
                 mtx[i][j] = moving_average
-
+        
         return mtx
 
     def get_profit(self, df, normalize=True):
@@ -119,9 +125,7 @@ class TradingBot(object):
         self.df['Volatility'] = [hi - li for hi, li in zip(high, low)]
 
         mtx = self.get_moving_averages(self.df, True)
-        print("LEN MTX", mtx[0])
         profit = self.get_profit(self.df, True)
-        print("LEN PROFIT", len(profit))
 
         # add to df
         for i in range(len(mtx[0])):
@@ -133,23 +137,29 @@ class TradingBot(object):
         return 
     
     
-    def btc_signal(self, global_pos, info, CUTOFF_LOWER, CUTOFF_UPPER):
+    def btc_signal(self, global_pos, CUTOFF_LOWER, CUTOFF_UPPER):
         # global_pos must be global
-        pred = self.REG.predict(self.X[global_pos:global_pos+1])
+        X_i = self.X[global_pos:global_pos+1]
+        pred = self.REG.predict(X_i)
         threshold_lower = self.MEAN + (self.STD_DEV * CUTOFF_LOWER)
         threshold_upper = self.MEAN + (self.STD_DEV * CUTOFF_UPPER)
         if threshold_lower <= pred[0] <= threshold_upper:
             return True
         return False
 
-    def btc_total_signal(self, X_test_index, info):
-        global_pos = X_test_index + self.NP_CUTOFF_VALUE
-        dg = self.btc_signal(global_pos, info, self.CUTOFF_LOWER, self.CUTOFF_UPPER)
+    def btc_total_signal(self, X_test_index, is_global_index=False):
+        #### hacky
+        if is_global_index:
+            global_pos = X_test_index
+        else:
+            global_pos = X_test_index + self.NP_CUTOFF_VALUE
+        
+        dg = self.btc_signal(global_pos, self.CUTOFF_LOWER, self.CUTOFF_UPPER)
         if dg:
             return 2
 
         if self.shorts:
-            dg = self.btc_signal(global_pos, info, -self.CUTOFF_UPPER, -self.CUTOFF_LOWER)
+            dg = self.btc_signal(global_pos, -self.CUTOFF_UPPER * 1.3, -self.CUTOFF_LOWER * 1.3)
             if dg:
                 return 1
         return 0
@@ -194,11 +204,14 @@ class TradingBot(object):
             
         print("df_btc_backtest.columns:", df_btc_backtest.columns)
         
-        
         REMAINING_VALUE = len(self.df) - self.NP_CUTOFF_VALUE
         df_btc_backtest = df_btc_backtest.iloc[-REMAINING_VALUE:]
         print("len(df_btc_backtest):", len(df_btc_backtest))
         return self.df_name, df_btc_backtest
+
+    def initialize_window_signaler_for_testing(self):
+        self.initialize_window_signaler()
+        self.train_model_for_backtesting()
 
     def generate_model_name(self):
         
@@ -227,5 +240,47 @@ class TradingBot(object):
 
     def load_model(self, model_name):
         self.REG = joblib.load('models/' + model_name)
-    
-    
+        print('\nLoaded saved model:', model_name)
+
+    def check_precision(self):
+        tp = 0
+        fp = 0
+        
+        def pct_over_z(pred, mean, std, z=1.2):
+            c = 0
+            for yi in pred:
+                if yi >= mean + (self.CUTOFF_LOWER * std):
+                    c += 1
+            return (c / len(pred)) * 100.0
+
+        def check_frequency():
+
+            train_pred = self.REG.predict(self.X_train)
+            mean1 = sum(train_pred) / len(train_pred)
+            std1 = (sum([(yi-mean1)**2 for yi in train_pred])/len(train_pred))**0.5
+
+            test_pred = self.REG.predict(self.X_test)
+            mean2 = sum(test_pred) / len(test_pred)
+            std2 = (sum([(yi-mean2)**2 for yi in test_pred])/len(test_pred))**0.5
+
+            c1 = pct_over_z(train_pred, mean1, std1)
+            c2 = pct_over_z(test_pred, mean2, std2)
+            print("\nPREDICTION ABOVE CUTOFF FREQUENCY:")
+            print("train:", c1)
+            print("test:", c2)
+
+        check_frequency()
+
+
+        for i in range(len(self.y_test)):
+            #print(m1.y_test[i][0])
+            pred = self.REG.predict(self.X_test[i:i+1])
+            if pred >= self.MEAN + (self.CUTOFF_LOWER * self.STD_DEV):
+                if self.y_test[i][0] >= 0:
+                    tp += 1
+                    print("tp:", self.y_test[i][0])
+                else:
+                    fp += 1
+
+        print(f"\n---->Precision on {str(tp+fp)} preditions:", tp/(tp+fp))
+        print("<-------------------------------------------")

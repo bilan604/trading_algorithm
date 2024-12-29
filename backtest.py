@@ -85,7 +85,7 @@ def add_btc_total_signal(df, tb):
     total_signal = []
     for i in range(len(df)):
         X_test_index = i  # it is not a global index
-        total_signal.append(tb.btc_total_signal(X_test_index, []))
+        total_signal.append(tb.btc_total_signal(X_test_index))
     df['TotalSignal'] = total_signal
     return df
 
@@ -193,7 +193,7 @@ def backtest(tb, additional_dfs, additional_df_names, control_folder_name):
     
     print(sum([frame["TotalSignal"].value_counts() for frame in dataframes], start=0))
 
-    plot_candlestick_with_signals(dataframes[0], start_index=300, num_rows=355)
+    plot_candlestick_with_signals(dataframes[0], start_index=0, num_rows=len(dataframes[0]))
     
     for i in range(len(dataframes)):
         print("------------------------------>")
