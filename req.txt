@@ -1,0 +1,8 @@
+pip install numpy
+pip install pandas
+pip install scikit-learn
+pip install backtesting
+pip install plotly
+pip install pandas-ta
+pip install backtesting
+pip install seaborn
