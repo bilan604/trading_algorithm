@@ -66,6 +66,11 @@ class TradingBot(object):
         self.df = df
         self.NP_CUTOFF_VALUE = int(self.NP_CUTOFF_PCT * len(self.df))
 
+        ########### HACKY
+        # if the csv is dynamic don't load pretrained
+        if "updating_btc.csv" in self.df_name:
+            return
+        # else try to load a pretrained model
         pretrained_model_name = self.check_pretrained_model_exists()
         if pretrained_model_name != None:
             self.load_model(pretrained_model_name)
@@ -164,10 +169,38 @@ class TradingBot(object):
                 return 1
         return 0
 
+    def train_model(self):
+        # Only use a fraction of the data when training for backtest purposes
+        REMAINING_VALUE = len(self.df) - self.NP_CUTOFF_VALUE
+        print("REMAINING_VALUE:", self.NP_CUTOFF_VALUE, "(the amount of data not used for training)")
+        X_train, X_test, y_train, y_test = self.X[:self.NP_CUTOFF_VALUE], self.X[-REMAINING_VALUE:], self.y[:self.NP_CUTOFF_VALUE], self.y[-REMAINING_VALUE:]
+        self.X_train = X_train
+        self.y_train = y_train
+        self.X_test = X_test
+        self.y_test = y_test
+        
+        if self.loaded_pretrained_model == False: # maybe if I decide no need to retain
+            print("Current time A:", datetime.now().strftime("%H:%M:%S"))
+            self.REG.fit(X_train, y_train)
+            print("Current time B:", datetime.now().strftime("%H:%M:%S"))
+
+        score = self.REG.score(X_test, y_test)
+        print("Score:", score)
+
+        # Generate predictions for data s.t. mean and std_dev can be calculated
+        y_train_pred = self.REG.predict(X_train)
+        mean = (sum(y_train_pred)/len(y_train_pred))
+        std_dev = math.sqrt(sum([(xi - mean)**2 for xi in y_train_pred])/len(y_train_pred))
+        
+        self.MEAN = mean
+        self.STD_DEV = std_dev
+        print(f"mean: {mean}, std_dev: {std_dev}")
+        return 
+
     def train_model_for_backtesting(self):
         # Only use a fraction of the data when training for backtest purposes
-        print("NP_CUTOFF_VALUE:", self.NP_CUTOFF_VALUE)
         REMAINING_VALUE = len(self.df) - self.NP_CUTOFF_VALUE
+        print("REMAINING_VALUE:", self.NP_CUTOFF_VALUE, "(the amount of data not used for training)")
         X_train, X_test, y_train, y_test = self.X[:self.NP_CUTOFF_VALUE], self.X[-REMAINING_VALUE:], self.y[:self.NP_CUTOFF_VALUE], self.y[-REMAINING_VALUE:]
         # BAD: X_train, X_test, y_train, y_test = train_test_split(X, y)
         self.X_train = X_train
@@ -284,3 +317,6 @@ class TradingBot(object):
 
         print(f"\n---->Precision on {str(tp+fp)} preditions:", tp/(tp+fp))
         print("<-------------------------------------------")
+
+
+

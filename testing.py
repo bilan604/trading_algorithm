@@ -1,6 +1,6 @@
 import random
 
-from tradingbot import TradingBot
+from trading_bot import TradingBot
 from trading_bots.control_bots import *
 
 import pandas as pd
