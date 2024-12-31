@@ -10,7 +10,6 @@ def get_seconds_difference(dt1, dt2):
     datediff = dt1 - dt2
     return datediff.seconds
 
-
 def append_to_cached_prices(path, price, time):
     obj = {
         'price': price,
@@ -110,8 +109,6 @@ def perform_routine(csv_path, cached_prices_path, trade_handler):
         else:
             perform_routine_event(trade_handler, csv_path, cached_prices_path)
             prev_time = curr_time
-
-
 
 
 from sklearn.ensemble import GradientBoostingRegressor

@@ -19,11 +19,12 @@ class Simulation(object):
 
         self.snapshots = []
 
-    def snapshot(self):
+    def snapshot(self, won=None):
         snapshot = {
             'cash': self.cash,
             'margin': self.margin,
             'commision': self.commision,
+            'won': won,
             'model_state': self.model.current_position,  # Storing current positions
             'time': self.model.df['Gmt time'][self.start_index]  # Time when the snapshot is taken
         }
@@ -60,7 +61,7 @@ class Simulation(object):
         max_drawdown = (min([ss['cash'] - start_cash for ss in self.snapshots]) / start_cash) * 100
         
         # Winrate: We'll assume a "win" is when the cash at the end is greater than the cash at the beginning.
-        winrate = sum([1 if self.snapshots[i]['cash'] > self.snapshots[i-1]['cash'] else 0 for i in range(1, len(self.snapshots))]) / (len(self.snapshots)-1) * 100
+        winrate = (sum([1 if self.snapshots[i]['won'] == True else 0 for i in range(1, len(self.snapshots))]) / (len(self.snapshots)-1)) * 100
 
         # Summary statistics
         stats = {
@@ -78,7 +79,7 @@ class Simulation(object):
         return stats
 
     def start(self):
-        self.snapshot()
+        self.snapshot(None)
 
         df = self.model.df
         for i in range(self.start_index, len(self.model.df)):
@@ -89,11 +90,11 @@ class Simulation(object):
                 if df['Open'][i] >= (entry_price * (1.0 + self.model.TPPERC)):
                     self.cash += df['Open'][i] * shares
                     self.model.current_position = []
-                    self.snapshot()
+                    self.snapshot(True)
                 elif df['Open'][i] <= (entry_price * (1.0 - self.model.SLPERC)):
                     self.cash += df['Open'][i] * shares
                     self.model.current_position = []
-                    self.snapshot()
+                    self.snapshot(False)
 
             total_signal = self.model.btc_total_signal(i, is_global_index=True)  # 0, 1, 2
             if total_signal == 0:
@@ -129,8 +130,12 @@ class Simulation(object):
             entry_price = self.model.current_position[0].entry_price
             shares = self.model.current_position[0].shares
             self.cash += df['Open'][len(df)-1] * shares
+            if df['Open'][len(df)-1] > entry_price:
+                won = True
+            else:
+                won = False
+            self.snapshot(None)
         
-        self.snapshot()
         return
 
 def simulate_both():
@@ -140,11 +145,11 @@ def simulate_both():
     REG = GradientBoostingRegressor(random_state=0)
     m1 = TradingBot(df_btc_name, REG, CUTOFF_LOWER=1.2, CUTOFF_UPPER=100, \
                     SLPERC=TEST_SLPERC, TPPERC=TEST_TPPERC, \
-                    NP_CUTOFF_PCT=0.8, shorts=False, \
+                    NP_CUTOFF_PCT=0.85, shorts=False, \
                     window_sizes=[1, 3, 9, 15, 30, 60, 120, 240, 480, 960])
     m1.initialize_window_signaler_for_testing()
 
-    m2 = ControlBot(df_name=df_btc_name, p = 0.5, SLPERC=TEST_SLPERC, TPPERC=TEST_TPPERC, shorts=False)
+    m2 = ControlBot(df_name=df_btc_name, p = 0.05, SLPERC=TEST_SLPERC, TPPERC=TEST_TPPERC, shorts=False)
 
     sim1 = Simulation(cash=10000, margin=1.0, commision=0.01, \
                     model=m1, start_index=m1.NP_CUTOFF_VALUE, trading_size=1)
@@ -186,7 +191,7 @@ def multitest():
 
     results2 = None
     for i in range(1000):
-        m2 = ControlBot(df_name=df_btc_name, p = 0.2, SLPERC=TEST_SLPERC, TPPERC=TEST_TPPERC, shorts=False)
+        m2 = ControlBot(df_name=df_btc_name, p = 0.1, SLPERC=TEST_SLPERC, TPPERC=TEST_TPPERC, shorts=False)
         sim2 = Simulation(cash=10000, margin=1.0, commision=0.01, \
                         model=m2, start_index=m1.NP_CUTOFF_VALUE, trading_size=1)
         sim2.start()
@@ -230,10 +235,6 @@ def simulate_XGBOT(np_cutoff_pct=0.8):
     return results
 
 
-
-#simulate_both()
-#simulate_michael_harris()
-
 def view_spread():
     # displays spread of performance on different training cutoffs
     def mma(rrs, key):
@@ -251,7 +252,4 @@ def view_spread():
     for k in rss[0].keys():
         print("\n\n---------------->KEY:", k)
         mma(rss, k)
-
-
-view_spread()
 

@@ -23,7 +23,7 @@ class TradeHandler:
 
         self.current_position = [] # to override the model's current position
         self.acceptable_commision_rate = 0.01 # what range of yesterday's close
-
+        
 
     def buy_bitcoin(self):
         # implement with tests first
@@ -57,6 +57,9 @@ class TradeHandler:
             pass
         if signal == 2:
             self.buy_bitcoin()
+        
+
+
 
 
 
