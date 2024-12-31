@@ -139,7 +139,7 @@ class Simulation(object):
         return
 
 def simulate_both():
-    df_btc_name = 'btc_data_aggregated.csv'
+    df_btc_name = 'csvs/btc_data_aggregated.csv'
     TEST_SLPERC = 0.05
     TEST_TPPERC = 0.05
     REG = GradientBoostingRegressor(random_state=0)
@@ -164,7 +164,7 @@ def simulate_both():
 
 
 def simulate_michael_harris():
-    df_btc_name = 'btc_data_aggregated.csv'
+    df_btc_name = 'csvs/btc_data_aggregated.csv'
     TEST_SLPERC = 0.04
     TEST_TPPERC = 0.04
     m1 = MichaelHarris(df_name=df_btc_name, SLPERC=TEST_SLPERC, TPPERC=TEST_TPPERC, shorts=False)
@@ -175,7 +175,7 @@ def simulate_michael_harris():
     sim1.compare_start_and_end_snapshots()
 
 def multitest():
-    df_btc_name = 'btc_data_aggregated.csv'
+    df_btc_name = 'csvs/btc_data_aggregated.csv'
     TEST_SLPERC = 0.05
     TEST_TPPERC = 0.05
     REG = GradientBoostingRegressor(random_state=0)
@@ -205,7 +205,7 @@ def multitest():
 
 
 def see_trade_frequency_and_precision():
-    df_btc_name = 'btc_data_aggregated.csv'
+    df_btc_name = 'csvs/btc_data_aggregated.csv'
     TEST_SLPERC = 0.05
     TEST_TPPERC = 0.05
     REG = GradientBoostingRegressor(random_state=0)
@@ -217,7 +217,7 @@ def see_trade_frequency_and_precision():
     m1.check_precision()
 
 def simulate_XGBOT(np_cutoff_pct=0.8):
-    df_btc_name = 'btc_data_aggregated.csv'
+    df_btc_name = 'csvs/btc_data_aggregated.csv'
     TEST_SLPERC = 0.05
     TEST_TPPERC = 0.05
     REG = GradientBoostingRegressor(random_state=0)

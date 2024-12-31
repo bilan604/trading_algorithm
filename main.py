@@ -4,7 +4,7 @@ from sklearn.ensemble import GradientBoostingRegressor
 from testing import *
 
 def run_backtest():
-    df_btc_name = 'btc_data_aggregated.csv'
+    df_btc_name = 'csvs/btc_data_aggregated.csv'
     REG = GradientBoostingRegressor(random_state=0)
     tb = TradingBot(df_btc_name, REG, CUTOFF_LOWER=1, CUTOFF_UPPER=100, \
                     SLPERC=0.05, TPPERC=0.05, \

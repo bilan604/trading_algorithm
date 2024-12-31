@@ -114,7 +114,7 @@ def perform_routine(csv_path, cached_prices_path, trade_handler):
 from sklearn.ensemble import GradientBoostingRegressor
 from trading_bot import TradingBot
 if __name__ == "__main__":
-    csv_path = 'btc_data_aggregated.csv'
+    csv_path = 'csvs/btc_data_aggregated.csv'
     cached_prices_path = 'cached_prices.txt'
     
     REG = GradientBoostingRegressor(random_state=0)

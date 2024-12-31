@@ -1,5 +1,10 @@
 # Trading Bot  
 
+## CDP API  
+trading is not permitted yet in api permissions
+
+## Metrics  
+
 The bot with parameters:
 
 TEST_SLPERC = 0.05  
