@@ -111,22 +111,3 @@ def perform_routine(csv_path, cached_prices_path, trade_handler):
             prev_time = curr_time
 
 
-from sklearn.ensemble import GradientBoostingRegressor
-from trading_bot import TradingBot
-if __name__ == "__main__":
-    csv_path = 'csvs/btc_data_aggregated.csv'
-    cached_prices_path = 'cached_prices.txt'
-    
-    REG = GradientBoostingRegressor(random_state=0)
-    model = TradingBot(df_name=csv_path, \
-                       REG=REG, \
-                       CUTOFF_LOWER=1.2, CUTOFF_UPPER=100, \
-                       SLPERC=0.05, TPPERC=0.05, \
-                       NP_CUTOFF_PCT=0.95, \
-                       shorts=False, \
-                       window_sizes=[1, 3, 9, 15, 30, 60, 120, 240, 480, 960])
-    trade_handler = TradeHandler(model=model, \
-                                 cash=100.0, \
-                                 margin=1.0, \
-                                 trade_size=1.0)
-    perform_routine(csv_path, cached_prices_path, trade_handler)

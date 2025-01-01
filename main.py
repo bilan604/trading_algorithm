@@ -16,12 +16,35 @@ def run_backtest():
     return results
 
 
-if __name__ == '__main__':
+from sklearn.ensemble import GradientBoostingRegressor
+from serve import perform_routine
+from trading_bot import TradingBot
+from trade_handler import TradeHandler
+
+
+if __name__ == "__main__":
+    csv_path = 'csvs/updating_btc.csv'
+    cached_prices_path = 'cached_prices.txt'
+    
+    REG = GradientBoostingRegressor(random_state=0)
+    model = TradingBot(df_name=csv_path, \
+                       REG=REG, \
+                       CUTOFF_LOWER=1.2, CUTOFF_UPPER=100, \
+                       SLPERC=0.05, TPPERC=0.05, \
+                       NP_CUTOFF_PCT=0.95, \
+                       shorts=False, \
+                       window_sizes=[1, 3, 9, 15, 30, 60, 120, 240, 480, 960])
+    trade_handler = TradeHandler(model=model, \
+                                 cash=100.0, \
+                                 margin=1.0, \
+                                 trade_size=1.0)
+    perform_routine(csv_path, cached_prices_path, trade_handler)
+
+
+
+#if __name__ == '__main__':
     # using the backtest library, comparison of my trading algorithm v.s. michael harris trading method
     #results = run_backtest()
-    #print("\n--------------------->results:")
-    #print(results)
-
     # compares XGBot against highest returning bot of 1000 randomly trading bots
     #multitest()
     # simulates trading with Michael Harris indicator
@@ -29,5 +52,5 @@ if __name__ == '__main__':
     # compares XGBot against randomly trading bot
     #simulate_both()
     # min, max, and average stats of 35 XGBots on different train/test split sizes
-    view_spread()
-
+    #view_spread()
+    

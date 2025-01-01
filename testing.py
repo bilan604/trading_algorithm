@@ -139,7 +139,7 @@ class Simulation(object):
         return
 
 def simulate_both():
-    df_btc_name = 'csvs/btc_data_aggregated.csv'
+    df_btc_name = 'csvs/updating_btc.csv'
     TEST_SLPERC = 0.05
     TEST_TPPERC = 0.05
     REG = GradientBoostingRegressor(random_state=0)
@@ -252,4 +252,20 @@ def view_spread():
     for k in rss[0].keys():
         print("\n\n---------------->KEY:", k)
         mma(rss, k)
+
+
+
+#if __name__ == '__main__':
+    # using the backtest library, comparison of my trading algorithm v.s. michael harris trading method
+    #results = run_backtest()
+    # compares XGBot against highest returning bot of 1000 randomly trading bots
+    #multitest()
+    # simulates trading with Michael Harris indicator
+    #simulate_michael_harris()
+    # compares XGBot against randomly trading bot
+    #simulate_both()
+    # min, max, and average stats of 35 XGBots on different train/test split sizes
+    #view_spread()
+
+
 
