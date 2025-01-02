@@ -29,9 +29,9 @@ if __name__ == "__main__":
     REG = GradientBoostingRegressor(random_state=0)
     model = TradingBot(df_name=csv_path, \
                        REG=REG, \
-                       CUTOFF_LOWER=1.2, CUTOFF_UPPER=100, \
+                       CUTOFF_LOWER=0.7, CUTOFF_UPPER=100, \
                        SLPERC=0.05, TPPERC=0.05, \
-                       NP_CUTOFF_PCT=0.95, \
+                       NP_CUTOFF_PCT=0.90, \
                        shorts=False, \
                        window_sizes=[1, 3, 9, 15, 30, 60, 120, 240, 480, 960])
     
