@@ -14,8 +14,6 @@ class Position(object):
         self.tpperc = tpperc
         self.commision = commision
         self.short = short
-        self.proceed = True # should proceed
-        self.not_proceed_reason = ""
 
 
 class TradeHandler:
@@ -28,7 +26,10 @@ class TradeHandler:
 
         self.current_position = [] # to override the model's current position
         self.acceptable_commision_rate = 0.01 # what range of yesterday's close
-
+        
+        self.proceed = True # should proceed
+        self.not_proceed_reason = ""
+        
         self.initialize()
     
     def initialize(self):
@@ -101,12 +102,13 @@ class TradeHandler:
                 return crypto_balance
         return None
 
-    def log_order(order_id, side, btc_usdc_price, limit_price, stop_trigger_price, path="logs/orders.txt"):
+    def log_order(order_id, side, btc_usdc_price, limit_price, stop_trigger_price, comission_pct, path="logs/orders.txt"):
         order_id = str(order_id)
         side = str(side) # its already a string but for consistency
         btc_usdc_price = str(btc_usdc_price)
         limit_price = str(limit_price)
         stop_trigger_price = str(stop_trigger_price)
+        comission_pct = str(comission_pct)
         updatedISO = datetime.now(timezone.utc).isoformat()
         obj = {
             "order_id": order_id,
@@ -114,6 +116,7 @@ class TradeHandler:
             "btc_usdc_price": btc_usdc_price,
             "limit_price": limit_price,
             "stop_trigger_price": stop_trigger_price,
+            "comission_pct": comission_pct,
             "updatedISO": updatedISO
         }
         with open(path, "a") as f:
@@ -155,7 +158,8 @@ class TradeHandler:
             order_id = order['success_response']['order_id']
             btc_usdc_price = self.get_btc_price()
             side = 'BUY'
-            self.log_order(order_id, side, btc_usdc_price, None, None)
+            commision_pct = ((order['average_filled_price'] - btc_usdc_price) / btc_usdc_price) * 100.0
+            self.log_order(order_id, side, btc_usdc_price, None, None, None, commision_pct)
 
             #fills = self.client.get_fills(order_id=order_id)
             #dumps(fills.to_dict())
@@ -198,7 +202,7 @@ class TradeHandler:
         if order['success']:
             order_id = order['success_response']['order_id'] # i.e. '383efe66-2a5d-415a-8103-bdf8228c518e'
             side = 'SELL'
-            self.log_order(order_id, side, btc_usdc_price, limit_price, stop_trigger_price)
+            self.log_order(order_id, side, btc_usdc_price, limit_price, stop_trigger_price, None)
             #fills = self.client.get_fills(order_id=order_id)
             #dumps(fills.to_dict())
         else:
@@ -230,36 +234,58 @@ class TradeHandler:
         buy_order_success = None
         sell_order_success = None
         buy_order_success = self.buy_bitcoin(trade_amount)
+        print(f"\n\n\n------------------------------------------------\nATTEMPTED TO EXECUTE A BUY ORDER\nbuy_order_success: {buy_order_success}\n------------------------------------------------\n\n\n")
         if buy_order_success == True:
             # grab the price before waiting
             btc_usdc_price = self.get_btc_price()
             # wait a few seconds so the order can be processed
-            time.sleep(10)
+            print("\nEXECUTED A BUY ORDER. BUY ORDER WAS SUCCESSFUL, SLEEPING FOR 30 SECONDS.")
+            time.sleep(30)
             sell_order_success = self.place_sl_tp_sell_order(btc_usdc_price)
-            
+            print(f"\n\n\n------------------------------------------------\nATTEMPTED TO EXECUTE A SELL ORDER\nsell_order_success: {buy_order_success}\n------------------------------------------------\n\n\n")
         return buy_order_success, sell_order_success
 
     def handle_new_day(self):
         # this function triggers when a new day has arrived
         # and the btc csv has been updated with yesterday's information
         print("TradeHandler.handle_new_day() called")
+        
+        # If the handler is currently in a position, it should not be trading yet
+        if self.current_position:
+            # refresh self.current_position, if the position has been closed then it can trade again
+            valid_load = self.load_current_position()
+            if valid_load == False:
+                self.proceed = False
+                self.not_proceed_reason = "valid_load was False after being returned from self.load_current_position(): something wrong occured"
+                raise Exception(self.not_proceed_reason)
+            # If the handler is currently in a position, it should not be trading yet
+            if self.current_position:
+                return
+            
+            # if the code reaches here then either tl or sl has been hit. Maybe generate summary statistics? (would require knowing what the order looks like when its completed)
+            print("Position was closed in the last 24 hours, currently no open position")
+
         if self.proceed == False:
             print("\n------------>handle_new_day(): NOT PROCEEDING", self.not_proceed_reason)
-            return
+            raise Exception(self.not_proceed_reason)
         
         self.model.initialize_window_signaler()
+        # Optional-ish: retrain the model every single day
         self.model.train_model()
 
         idx_yesterday = len(self.model.df) - 1
+        
         Xi = self.model.X[idx_yesterday:idx_yesterday+1] # moving averages and input for yesterday
         date = self.model.df['Gmt time'][idx_yesterday] # yesterday
-        print("Predicting for date", date)
+        print("\n------------------------------->handle_new_day():")
+        print("Xi (Prediction Column):", Xi)
+        print("Date:", date)
+        print("idx_yesterday (prediction index on dataframe):", idx_yesterday)
 
         # signal: 0 for pass, 1 for short, 2 for buy
         signal = self.model.btc_total_signal(idx_yesterday, is_global_index=True)
 
         # consider future selling if is good time to short, problem is no idea where the cutoffs should be yet
-
         if signal == 0:
             pass
         if signal == 1:
@@ -287,7 +313,7 @@ class TradeHandler:
 
     def get_latest_buy_order(self):
         orders = self.get_orders()
-        for order in orders['orders'][::-1]:
+        for order in orders['orders']:
             if order['side'] == 'BUY':
                 return order
         return None

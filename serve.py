@@ -33,6 +33,8 @@ def load_cached_prices(path):
 def is_new_day_from_cached_prices(path):
     dt1 = datetime.now(timezone.utc)
     cached_prices = load_cached_prices(path)
+    # this should only be true on start. Whenever cached_prices.txt is cleared during runtime on a new day,
+    # it gets a row added right afterwards
     if not cached_prices:
         return False
     first_price = datetime.fromisoformat(cached_prices[0]['updatedISO'])
@@ -76,6 +78,9 @@ def update_btc_csv(csv_path, cached_prices_path):
         if (data['Low'][0] == None) or data['Low'][0] >= curr_price:
             data['Low'][0] = curr_price
     
+    if data['High'][0] == None or data['Low'] == None:
+        raise Exception("Attempted to add High: [None] and Low: [None] to bitcoin csv. cached_prices.txt was likely empty.")
+    
     concat_data_to_dataframe(csv_path, data)
 
     # clear cache
@@ -105,7 +110,7 @@ def perform_routine(csv_path, cached_prices_path, trade_handler):
         seconds_elapsed = get_seconds_difference(curr_time, prev_time)
         if seconds_elapsed <= 3600:
             print("sleeping for 600 seconds")
-            time.sleep(600)
+            time.sleep(120)
         else:
             perform_routine_event(trade_handler, csv_path, cached_prices_path)
             prev_time = curr_time

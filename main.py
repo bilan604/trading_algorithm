@@ -42,7 +42,7 @@ if __name__ == "__main__":
     trade_handler = TradeHandler(model=model, \
                                     client=client, \
                                     margin=1.0, \
-                                    trade_size=0.5)
+                                    trade_size=0.45)
     
     perform_routine(csv_path, cached_prices_path, trade_handler)
 

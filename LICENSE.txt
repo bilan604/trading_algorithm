@@ -1,0 +1,8 @@
+# LICENSE
+
+Copyright (c) [Xing Yang Lan]
+
+All rights reserved.
+
+This software may not be copied, used, or modified without explicit permission from the author.
+

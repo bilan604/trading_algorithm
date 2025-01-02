@@ -145,7 +145,7 @@ def simulate_both():
     REG = GradientBoostingRegressor(random_state=0)
     m1 = TradingBot(df_btc_name, REG, CUTOFF_LOWER=1.2, CUTOFF_UPPER=100, \
                     SLPERC=TEST_SLPERC, TPPERC=TEST_TPPERC, \
-                    NP_CUTOFF_PCT=0.85, shorts=False, \
+                    NP_CUTOFF_PCT=0.8, shorts=False, \
                     window_sizes=[1, 3, 9, 15, 30, 60, 120, 240, 480, 960])
     m1.initialize_window_signaler_for_testing()
 
@@ -257,7 +257,7 @@ def view_spread():
 from trading_bot import TradingBot
 from backtest import backtest
 from sklearn.ensemble import GradientBoostingRegressor
-from testing import *
+
 
 def run_backtest():
     df_btc_name = 'csvs/btc_data_aggregated.csv'
@@ -285,4 +285,4 @@ def run_backtest():
     #view_spread()
 
 
-
+simulate_both()
