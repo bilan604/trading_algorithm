@@ -13,7 +13,7 @@ import joblib
 class TradingBot(object):
     def __init__(self, df_name, REG, \
                  CUTOFF_LOWER=1.2, CUTOFF_UPPER=100, \
-                 SLPERC=0.04, TPPERC=0.04, \
+                 SLPERC=0.05, TPPERC=0.05, \
                  NP_CUTOFF_PCT=0.8, \
                  window_sizes=[1, 3, 9, 15, 30, 60, 120, 240, 480, 960],
                  shorts=False):
@@ -70,6 +70,7 @@ class TradingBot(object):
         # if the csv is dynamic don't load pretrained
         if "updating_btc.csv" in self.df_name:
             return
+        print("\nMESSAGE: LOADING PRETRAINED MODEL\n")
         # else try to load a pretrained model
         pretrained_model_name = self.check_pretrained_model_exists()
         if pretrained_model_name != None:
@@ -101,7 +102,7 @@ class TradingBot(object):
         profits = []
         for i in range(len(df)):
             profit = None
-            ini = df['Open'].iloc[i]
+            ini = df['Close'].iloc[i]
             for j in range(1, len(df)+1):
                 if i + j >= len(df['Open']):
                     profit = 0
@@ -132,7 +133,7 @@ class TradingBot(object):
         mtx = self.get_moving_averages(self.df, True)
         profit = self.get_profit(self.df, True)
 
-        # add to df
+        # add to df - does not affect self.X and self.y
         for i in range(len(mtx[0])):
             self.df['MA'+str(self.window_sizes[i])] = np.array(mtx)[:, i]
 
@@ -140,7 +141,6 @@ class TradingBot(object):
         self.y = np.reshape(np.array(profit), (len(profit), 1))
 
         return 
-    
     
     def btc_signal(self, global_pos, CUTOFF_LOWER, CUTOFF_UPPER):
         # global_pos must be global
@@ -172,7 +172,7 @@ class TradingBot(object):
     def train_model(self):
         # Only use a fraction of the data when training for backtest purposes
         REMAINING_VALUE = len(self.df) - self.NP_CUTOFF_VALUE
-        print("REMAINING_VALUE:", self.NP_CUTOFF_VALUE, "(the amount of data not used for training)")
+        print("REMAINING_VALUE:", len(self.df) - self.NP_CUTOFF_VALUE, "(the amount of data not used for training)")
         X_train, X_test, y_train, y_test = self.X[:self.NP_CUTOFF_VALUE], self.X[-REMAINING_VALUE:], self.y[:self.NP_CUTOFF_VALUE], self.y[-REMAINING_VALUE:]
         self.X_train = X_train
         self.y_train = y_train
@@ -180,9 +180,7 @@ class TradingBot(object):
         self.y_test = y_test
         
         if self.loaded_pretrained_model == False: # maybe if I decide no need to retain
-            print("Current time A:", datetime.now().strftime("%H:%M:%S"))
             self.REG.fit(X_train, y_train)
-            print("Current time B:", datetime.now().strftime("%H:%M:%S"))
 
         score = self.REG.score(X_test, y_test)
         print("Score:", score)
@@ -200,7 +198,7 @@ class TradingBot(object):
     def train_model_for_backtesting(self):
         # Only use a fraction of the data when training for backtest purposes
         REMAINING_VALUE = len(self.df) - self.NP_CUTOFF_VALUE
-        print("REMAINING_VALUE:", self.NP_CUTOFF_VALUE, "(the amount of data not used for training)")
+        print("REMAINING_VALUE:", len(self.df) - self.NP_CUTOFF_VALUE, "(the amount of data not used for training)")
         X_train, X_test, y_train, y_test = self.X[:self.NP_CUTOFF_VALUE], self.X[-REMAINING_VALUE:], self.y[:self.NP_CUTOFF_VALUE], self.y[-REMAINING_VALUE:]
         # BAD: X_train, X_test, y_train, y_test = train_test_split(X, y)
         self.X_train = X_train
@@ -209,9 +207,7 @@ class TradingBot(object):
         self.y_test = y_test
         
         if self.loaded_pretrained_model == False:
-            print("Current time A:", datetime.now().strftime("%H:%M:%S"))
             self.REG.fit(X_train, y_train)
-            print("Current time B:", datetime.now().strftime("%H:%M:%S"))
 
         score = self.REG.score(X_test, y_test)
         print("Score:", score)
@@ -223,7 +219,7 @@ class TradingBot(object):
         
         self.MEAN = mean
         self.STD_DEV = std_dev
-        print(f"mean: {mean}, std_dev: {std_dev}")
+        #print(f"mean: {mean}, std_dev: {std_dev}")
         return 
 
     def initialize_window_signaler_for_backtesting(self):
@@ -298,7 +294,7 @@ class TradingBot(object):
 
             c1 = pct_over_z(train_pred, mean1, std1)
             c2 = pct_over_z(test_pred, mean2, std2)
-            print("\nPREDICTION ABOVE CUTOFF FREQUENCY:")
+            print("\nPCT OF PREDICTIONS ABOVE CUTOFF FREQUENCY:")
             print("train:", c1)
             print("test:", c2)
 
@@ -306,12 +302,10 @@ class TradingBot(object):
 
 
         for i in range(len(self.y_test)):
-            #print(m1.y_test[i][0])
             pred = self.REG.predict(self.X_test[i:i+1])
             if pred >= self.MEAN + (self.CUTOFF_LOWER * self.STD_DEV):
                 if self.y_test[i][0] >= 0:
                     tp += 1
-                    print("tp:", self.y_test[i][0])
                 else:
                     fp += 1
 

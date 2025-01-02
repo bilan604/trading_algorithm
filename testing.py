@@ -145,15 +145,15 @@ def simulate_both():
     REG = GradientBoostingRegressor(random_state=0)
     m1 = TradingBot(df_btc_name, REG, CUTOFF_LOWER=1.2, CUTOFF_UPPER=100, \
                     SLPERC=TEST_SLPERC, TPPERC=TEST_TPPERC, \
-                    NP_CUTOFF_PCT=0.8, shorts=False, \
+                    NP_CUTOFF_PCT=0.85, shorts=False, \
                     window_sizes=[1, 3, 9, 15, 30, 60, 120, 240, 480, 960])
     m1.initialize_window_signaler_for_testing()
 
     m2 = ControlBot(df_name=df_btc_name, p = 0.05, SLPERC=TEST_SLPERC, TPPERC=TEST_TPPERC, shorts=False)
 
-    sim1 = Simulation(cash=10000, margin=1.0, commision=0.01, \
+    sim1 = Simulation(cash=10000, margin=1.0, commision=0.0, \
                     model=m1, start_index=m1.NP_CUTOFF_VALUE, trading_size=1)
-    sim2 = Simulation(cash=10000, margin=1.0, commision=0.01, \
+    sim2 = Simulation(cash=10000, margin=1.0, commision=0.0, \
                     model=m2, start_index=m1.NP_CUTOFF_VALUE, trading_size=1)
 
     sim1.start()
@@ -164,7 +164,7 @@ def simulate_both():
 
 
 def simulate_michael_harris():
-    df_btc_name = 'csvs/btc_data_aggregated.csv'
+    df_btc_name = 'csvs/updating_btc.csv'
     TEST_SLPERC = 0.04
     TEST_TPPERC = 0.04
     m1 = MichaelHarris(df_name=df_btc_name, SLPERC=TEST_SLPERC, TPPERC=TEST_TPPERC, shorts=False)
@@ -175,7 +175,7 @@ def simulate_michael_harris():
     sim1.compare_start_and_end_snapshots()
 
 def multitest():
-    df_btc_name = 'csvs/btc_data_aggregated.csv'
+    df_btc_name = 'csvs/updating_btc.csv'
     TEST_SLPERC = 0.05
     TEST_TPPERC = 0.05
     REG = GradientBoostingRegressor(random_state=0)
@@ -203,31 +203,30 @@ def multitest():
     sim1.display_stats(results1)
     sim2.display_stats(results2)
 
-
 def see_trade_frequency_and_precision():
-    df_btc_name = 'csvs/btc_data_aggregated.csv'
+    df_btc_name = 'csvs/updating_btc.csv'
     TEST_SLPERC = 0.05
     TEST_TPPERC = 0.05
     REG = GradientBoostingRegressor(random_state=0)
     m1 = TradingBot(df_btc_name, REG, CUTOFF_LOWER=1.2, CUTOFF_UPPER=100, \
                     SLPERC=TEST_SLPERC, TPPERC=TEST_TPPERC, \
-                    NP_CUTOFF_PCT=0.9, shorts=False, \
+                    NP_CUTOFF_PCT=0.8, shorts=False, \
                     window_sizes=[1, 3, 9, 15, 30, 60, 120, 240, 480, 960])
     m1.initialize_window_signaler_for_testing()
     m1.check_precision()
 
-def simulate_XGBOT(np_cutoff_pct=0.8):
-    df_btc_name = 'csvs/btc_data_aggregated.csv'
-    TEST_SLPERC = 0.05
-    TEST_TPPERC = 0.05
+def simulate_XGBOT(np_cutoff_pct=0.8, CUTOFF_LOWER=1.2):
+    df_btc_name = 'csvs/updating_btc.csv'
+    TEST_SLPERC = 0.04
+    TEST_TPPERC = 0.04
     REG = GradientBoostingRegressor(random_state=0)
-    m1 = TradingBot(df_btc_name, REG, CUTOFF_LOWER=1.2, CUTOFF_UPPER=100, \
+    m1 = TradingBot(df_btc_name, REG, CUTOFF_LOWER=CUTOFF_LOWER, CUTOFF_UPPER=100, \
                     SLPERC=TEST_SLPERC, TPPERC=TEST_TPPERC, \
                     NP_CUTOFF_PCT=np_cutoff_pct, shorts=False, \
                     window_sizes=[1, 3, 9, 15, 30, 60, 120, 240, 480, 960])
     m1.initialize_window_signaler_for_testing()
 
-    sim1 = Simulation(cash=10000, margin=1.0, commision=0.01, \
+    sim1 = Simulation(cash=10000, margin=1.0, commision=0.0, \
                     model=m1, start_index=m1.NP_CUTOFF_VALUE, trading_size=1)
     
     sim1.start()
@@ -243,10 +242,10 @@ def view_spread():
         print("AVG:", sum([rssi[key] for rssi in rss])/len(rss))
 
     rss = []
-    for i in range(35):
-        np_cutoff_pct = 0.6 + (0.01) * i
-        print("np_cutoff_pct:", np_cutoff_pct)
-        results = simulate_XGBOT(np_cutoff_pct)
+    for i in range(15):
+        np_cutoff_pct = 0.8 + (0.01) * i
+        print("\n--------------------------->np_cutoff_pct:", np_cutoff_pct)
+        results = simulate_XGBOT(np_cutoff_pct, 0.7) # return % stops going up after 0.55, avg win rate drops to 72% (0.04, 0.04, range(0.8-0.95))
         rss.append(results)
 
     for k in rss[0].keys():
@@ -285,4 +284,6 @@ def run_backtest():
     #view_spread()
 
 
-simulate_both()
+#simulate_both()
+view_spread()
+#see_trade_frequency_and_precision()
