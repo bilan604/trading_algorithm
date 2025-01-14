@@ -4,8 +4,6 @@
 
 Theres a conflict with urllib3 package for cdp-sdk (requires urllib > 2.3.0) and the urllib3 version requirements for google-auth (unused in this project anyways)  
 
-tradehandler.initialize gets position.entry_price wrong?  
-
 ## How XGBot works:  
 
 The bot trades based on a daily basis based on the moving averages (for a bunch of different window sizes) for the day. Every day once the day has closed, the moving averages are generated and the bot makes a guess on how much it would earn / lose if it opened up a new position.  
