@@ -22,7 +22,7 @@ def get_env(path=".env"):
     return env
 
 
-
+# version of main for running the bot to trade BTC on Coinbase
 if __name__ == "__main__":
     csv_path = 'csvs/updating_btc.csv'
     cached_prices_path = 'cached_prices.txt'
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     perform_routine(csv_path, cached_prices_path, trade_handler)
 
 
-
+# Version of main for running main.py to test
 #if __name__ == '__main__':
     # using the backtest library, comparison of my trading algorithm v.s. michael harris trading method
     #results = run_backtest()
