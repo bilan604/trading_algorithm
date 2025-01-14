@@ -16,23 +16,28 @@ In actually buying bitcoin, the bot trades USDC for BTC on Coinbase. The bot tra
 
 ## Veriables:  
 
-<b>NP_CUTOFF_PCT</b>: The fraction of data (in the range [0.0, 1.0]) to be used for training. Everything else will be used for testing. Setting this variable closer to 1.0 means more data will be used for training and at the same time there is less time to trade since less of the data is used for testing.  
+<b>NP_CUTOFF_PCT</b>:  
+The fraction of data (in the range [0.0, 1.0]) to be used for training. Everything else will be used for testing. Setting this variable closer to 1.0 means more data will be used for training and at the same time there is less time to trade since less of the data is used for testing.  
 
 Increasing NP_CUTOFF_PCT also tends to decrease the number of trades the bot is willing to make for a given CUTOFF_LOWER.  
 
-<b>CUTOFF_LOWER</b>:  The minimum standard deviations above the mean of its' predictions in the training dataset that the profit prediction for the current day (in the testing dataset) must be to trigger the bot to open a new position.  
+<b>CUTOFF_LOWER</b>:  
+The minimum standard deviations above the mean of its' predictions in the training dataset that the profit prediction for the current day (in the testing dataset) must be to trigger the bot to open a new position.  
 
 Increasing CUTOFF_LOWER slightly increases it's winrate, but makes the bot trade much less frequently.  
 
-<b>CUTOFF_UPPER</b>: The maximum standard deviations above the mean of its' predictions in the training dataset that the profit prediction for the current day (in the testing dataset) must be to trigger the bot to open a new position.  
+<b>CUTOFF_UPPER</b>:  
+The maximum standard deviations above the mean of its' predictions in the training dataset that the profit prediction for the current day (in the testing dataset) must be to trigger the bot to open a new position.  
 
 This is generally just set to 100 so the bot takes all trades above CUTOFF_LOWER. The only reason this variable exists was to prevent anomalies from making the bot take trades, but it seems like the bot makes more taking as many trades as possible.  
 
-<b>SL_PERC</b>: The fraction (in the range [0.0, 1.0]) below the buying price that a sell order should be placed for the sake of stop loss.  
+<b>SL_PERC</b>:  
+The fraction (in the range [0.0, 1.0]) below the buying price that a sell order should be placed for the sake of stop loss.  
 
 For example, if SL_PERC is 0.04 and it buys a stock at $100.00 / share, it will place a sell order at $96.00.  
 
-<b>TP_PERC</b>: The fraction (in the range [0.0, 1.0]) above the buying price that a sell order should be placed for the sake of taking profit.
+<b>TP_PERC</b>:  
+The fraction (in the range [0.0, 1.0]) above the buying price that a sell order should be placed for the sake of taking profit.
 
 For example, if TP_PERC is 0.04 and it buys a stock at $100.00 / share, it will place a sell order at $104.00.  
 
