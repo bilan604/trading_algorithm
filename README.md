@@ -1,4 +1,4 @@
-# XGBot   
+# A BTC Trading Bot: XGBot  
 
 ## Personal Notes:  
 
@@ -75,9 +75,25 @@ AVG: 23277.264825517155
 MAX: 56
 MIN: 15
 AVG: 31.933333333333334
-```
+```  
 
-## CDP API  
+#### On average, the bot has 366.8 days (about a year) to trade, and returns +132%.  
+
+#### The following is from when it has exactly one year to trade:  
+
+```
+------------------->XGBBot Simulation Results:
+Total Snapshots: 20
+Return Percentage: 101.6713240585551%
+Maximum Drawdown: 0.0%
+Winrate: 84.21052631578947%
+Start Cash: 10000
+End Cash: 20167.13240585551
+Total Trades: 19
+```  
+
+
+## CDP API:  
 
 It works.  
 
