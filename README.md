@@ -14,6 +14,8 @@ When it opens up a new position, it buys BTC using USDC (0% transfer fee) and pl
 
 The BTC data is split into a training set and a testing set where the bot is trained only on data before a certain timeframe and tested on data after a certain timeframe. For each day, the training inputs are the moving averages for the day, and the outputs are how much it would have made if it opened up a new position.  
 
+In actually buying bitcoin, the bot trades USDC for BTC on Coinbase. The bot trades only using the USDC readily available, meaning USDC must be manually bought to fund the bot. This is implemented as such so the bot can only use cash in the from USDC the account already owns, as opposed to cash directly from a bank account.   
+
 ## Veriables:  
 
 <b>NP_CUTOFF_PCT</b>: The fraction of data (in the range [0.0, 1.0]) to be used for training. Everything else will be used for testing. Setting this variable closer to 1.0 means more data will be used for training and at the same time there is less time to trade since less of the data is used for testing.  
