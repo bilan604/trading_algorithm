@@ -12,7 +12,7 @@ def update_origin():
 
     lines = [
         'git add .',
-        'git commit -m "automated origin update"',
+        'git commit -m "auto"',
         'git push origin VM_trading'
     ]
     for line in lines:
