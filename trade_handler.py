@@ -367,7 +367,7 @@ class TradeHandler:
             time.sleep(10)
             sell_order_success = self.place_sl_tp_sell_order(btc_usdc_price)
             print(f"\n\n\n------------------------------------------------\n\
-                  ATTEMPTED TO EXECUTE A SELL ORDER\n    ->sell_order_success: {buy_order_success}\n\
+                  ATTEMPTED TO EXECUTE A SELL ORDER\n    ->sell_order_success: {sell_order_success}\n\
                     ------------------------------------------------\n\n\n")
             VM_log(f"--->#### ATTEMPTED TO EXECUTE A SELL ORDER####. sell_order_success: {sell_order_success}")
 
@@ -421,7 +421,7 @@ class TradeHandler:
                 if is_expired_buy_order == True:
                     self.cancel_open_buy_order()
 
-                    time.sleep(10)
+                    time.sleep(45)
 
                     # one last check to make sure
                     exists_open_buy_order = self.check_existing_open_buy_order()
@@ -458,7 +458,7 @@ class TradeHandler:
         Xi = self.model.X[idx_yesterday:idx_yesterday+1] # moving averages and input for yesterday
         date = self.model.df['Gmt time'][idx_yesterday] # yesterday
         print("\n------------------------------->handle_new_day():")
-        print("Xi (Prediction Column):", Xi)
+        print("Xi (Prediction Row):", Xi)
         print("Date:", date)
         print("idx_yesterday (prediction index on dataframe):", idx_yesterday)
 

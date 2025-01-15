@@ -73,6 +73,9 @@ def update_origin():
     import subprocess
 
     lines = [
+        'git config --global user.email "bilan604@yahoo.com"',
+        'git config --global user.name "bilan604"',
+        'git config --global user.password "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"',
         'git add .',
         'git commit -m "auto"',
         'git push origin VM_trading'
