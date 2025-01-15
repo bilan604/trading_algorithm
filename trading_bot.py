@@ -69,7 +69,7 @@ class TradingBot(object):
         ########### HACKY
         # the following condition checks whether to skip loading a pretrained model
         # however, the model is recalculated for each test / everyday anyways
-        # TODO: delete following condition?
+        # TODO: remove loading pretrained altogether?
         if "updating_btc.csv" in self.df_name:
             return
 
@@ -181,9 +181,11 @@ class TradingBot(object):
         self.y_train = y_train
         self.X_test = X_test
         self.y_test = y_test
-        
-        if self.loaded_pretrained_model == False: # maybe if I decide no need to retain
-            self.REG.fit(X_train, y_train)
+
+        print("---------------------->")
+        print("Training model (fitting the regresor)")
+        print("<----------------------")
+        self.REG.fit(X_train, y_train)
 
         score = self.REG.score(X_test, y_test)
         print("Score:", score)
@@ -246,7 +248,6 @@ class TradingBot(object):
         self.train_model_for_backtesting()
 
     def generate_model_name(self):
-        
         ws = json.dumps(self.window_sizes)
         ws = re.sub(", ", "-", ws)
         ws = re.sub("\[", "#", ws)
@@ -254,7 +255,10 @@ class TradingBot(object):
         shorts = 'false'
         if self.shorts:
             shorts = 'true'
-        model_name = [self.df_name.split(".")[0], str(self.SLPERC), str(self.TPPERC), str(self.CUTOFF_LOWER), str(self.CUTOFF_UPPER), str(self.NP_CUTOFF_VALUE), shorts, ws]
+        csv_name = self.df_name.split(".csv")[0]
+        if "/" in csv_name:
+            csv_name = csv_name.split("/")[-1]
+        model_name = [csv_name, str(self.SLPERC), str(self.TPPERC), str(self.CUTOFF_LOWER), str(self.CUTOFF_UPPER), str(self.NP_CUTOFF_VALUE), shorts, ws]
         model_name = "_".join(model_name)
         return model_name
 

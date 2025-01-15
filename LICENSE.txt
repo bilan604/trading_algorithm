@@ -2,6 +2,8 @@
 
 Copyright (c) [Xing Yang Lan]
 
+With the exception of the code in 'backtest.py'.
+
 All rights reserved.
 
 This software may not be copied, used, or modified without explicit permission from the author.

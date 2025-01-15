@@ -234,7 +234,7 @@ def backtest(tb, additional_dfs, additional_df_names, control_folder_name):
     heatmaps = []
 
     for df in dataframes:
-        bt = Backtest(df, MyStrat, cash=100000, margin=1/5, commission=0.0002)
+        bt = Backtest(df, MyStrat, cash=200000, margin=1/5, commission=0.0002)
         stats, heatmap = bt.optimize(slperc=[i/100 for i in range(1, 8)],
                                     tpperc=[i/100 for i in range(1, 8)],
                         maximize='Return [%]', max_tries=3000,
@@ -265,6 +265,12 @@ def backtest(tb, additional_dfs, additional_df_names, control_folder_name):
     print(f"Average Trade: {avg_trade:.2f}%")
     #print(f"Maximum Trade Duration: {max_trade_duration} days")
     #print(f"Average Trade Duration: {avg_trade_duration:.2f} days")
+
+    print("\n------------------------------->")
+    print("results for btc trading backtest:")
+    print(results[0])
+    print("<-------------------------------\n")
+
 
     equity_curves = [stats['_equity_curve']['Equity'] for stats in results]
     max_length = max(len(equity) for equity in equity_curves)
