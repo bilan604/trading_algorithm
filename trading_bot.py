@@ -67,13 +67,16 @@ class TradingBot(object):
         self.NP_CUTOFF_VALUE = int(self.NP_CUTOFF_PCT * len(self.df))
 
         ########### HACKY
-        # if the csv is dynamic don't load pretrained
+        # the following condition checks whether to skip loading a pretrained model
+        # however, the model is recalculated for each test / everyday anyways
+        # TODO: delete following condition?
         if "updating_btc.csv" in self.df_name:
             return
-        print("\nMESSAGE: LOADING PRETRAINED MODEL\n")
+
         # else try to load a pretrained model
         pretrained_model_name = self.check_pretrained_model_exists()
         if pretrained_model_name != None:
+            print("\nMESSAGE: LOADING PRETRAINED MODEL\n")
             self.load_model(pretrained_model_name)
             self.loaded_pretrained_model = True
     
