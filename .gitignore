@@ -1,1 +1,3 @@
 .env
+VM_logs.txt
+cached_prices.txt

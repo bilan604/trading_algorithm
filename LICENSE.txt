@@ -1,8 +1,8 @@
 # LICENSE
 
-Copyright (c) [Xing Yang Lan]
+With the exception of the price data and the code in backtest.py (source YT@CodeTrading).
 
-With the exception of the code in 'backtest.py'.
+Copyright (c) [Xing Yang Lan]
 
 All rights reserved.
 

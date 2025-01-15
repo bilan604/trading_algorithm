@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 
 from trading_bot import TradingBot
 
+from helpers import VM_log
 
 class Position(object):
     def __init__(self, entry_price, shares, date, slperc, tpperc, commision, short):
@@ -50,7 +51,6 @@ class TradeHandler:
     def get_orders(self):
         orders = self.client.list_orders()
         orders = orders.to_dict()
-        print(orders['orders'])    
         return orders
 
     def get_open_orders(self):
@@ -119,21 +119,21 @@ class TradeHandler:
         # price in USDC/USD
         return self.get_product_price("BTC-USDC")
 
-    def buy_bitcoin(self, usd_amount: float):  
-        # bitcoin precision: 8
+    def buy_bitcoin(self):  
         # usd precision: 2
-        ####
-        STILL_TESTING = True
-        if STILL_TESTING == True:
-            print("EARLY RETURN, STILL TESTING buy_bitcoin()")
-            return False
+        # bitcoin precision: 8
 
         # use client to buy BTC-USDC, quote_size in USDC
         new_order_id = self.generate_client_order_id()
-        available_usdc = self.get_crypto_value_of_asset("USDC")
+        available_usdc = self.get_crypto_value_of_asset("USDC") # basically the amount of USD
+        
+        # self.trade_size should be under 1.0 or price 
+        # fluctuations could cause buy orders to not go through
         quote_size = round(available_usdc * self.trade_size, 2) # precision of 2 required for usdc
+        VM_log(f"--->Trade handler buy_bitcoin() called. Amount of BTC in USDC it will be buying: {str(quote_size)}")
         if quote_size < 1.0:
             print("\nERROR: QUOTE SIZE LIKELY TOO SMALL:", str(quote_size))
+            VM_log(f"--->trade_handler will not be submitting the buy order as the quote_size was too small.\n")
             return False
 
         order = self.client.market_order_buy(
@@ -141,6 +141,7 @@ class TradeHandler:
             product_id="BTC-USDC",
             quote_size=str(quote_size)
         )
+
         # TODO: figure out what to do after logging an order / with logged orders
         if order['success']:
             order_id = order['success_response']['order_id']
@@ -151,20 +152,18 @@ class TradeHandler:
 
             #fills = self.client.get_fills(order_id=order_id)
             #dumps(fills.to_dict())
+            
+            VM_log(f"--->trade handler successfully executed order to buy bitcoin. order_id: {order_id}, btc_usdc_price: {btc_usdc_price}\n")
         else:
             error_response = order['error_response']
             print("\n---------------->Error processing order in buy_bitcoin():")
             print(error_response)
+            VM_log(f"--->trade handler was unsuccessful in executing order to buy bitcoin. error_response: {error_response}\n")
             return False
 
         return True
 
     def place_sl_tp_sell_order(self, btc_usdc_price):
-        ####
-        STILL_TESTING = True
-        if STILL_TESTING == True:
-            print("EARLY RETURN, STILL TESTING place_sl_tp_sell_orders()")
-            return 
 
         new_order_id = self.generate_client_order_id()
         # trigger_bracket_order_gtc_sell:
@@ -178,7 +177,9 @@ class TradeHandler:
         stop_trigger_price = btc_usdc_price * (1.0 - self.model.SLPERC)
         stop_trigger_price = round(stop_trigger_price, 2) # in USDC
         
-        order  = self.client.trigger_bracket_order_gtc_sell(
+        VM_log(f"--->#### trade_handler is going to place a trigger bracket sell order #### available_btc: {str(available_btc)}, limit_price: {str(limit_price)}, stop_trigger_price: {stop_trigger_price}\n")
+
+        order = self.client.trigger_bracket_order_gtc_sell(
             client_order_id=new_order_id,
             product_id='BTC-USDC',
             base_size=str(base_size),
@@ -194,10 +195,12 @@ class TradeHandler:
 
             #fills = self.client.get_fills(order_id=order_id)
             #dumps(fills.to_dict())
+            VM_log(f"--->trade handler submitted trigger bracket order for selling bitcoin. order_id: {order_id}\n")
         else:
             error_response = order['error_response']
             print("\n---------------->Error processing order in place_sl_tp_sell_order():")
             print(error_response)
+            VM_log(f"--->trade_handler encountered an error placing a trigger bracket sell order. error_response: {error_response}.\n")
             return False
     
         return True
@@ -259,6 +262,7 @@ class TradeHandler:
             if hours_elapsed >= 12:
                 #cancel buy position
                 self.client.cancel_orders([buy_order['order_id']])
+                VM_log(f"--->trade_handler cancelled open buy order (order_id: {buy_order['order_id']}) since it was not filled in 12 hours.\n")
                 return True
         
         return False
@@ -277,20 +281,20 @@ class TradeHandler:
             return True
         return False
 
-    def get_latest_closed_buy_order(self):
+    def get_latest_closed_buy_order(self, product_id='BTC-USDC'):
+        # FILLED / OPEN
         orders = self.get_orders()
         for order in orders['orders']:
-            if order['side'] == 'BUY' and order['status'] != 'OPEN':
+            if order['side'] == 'BUY' and order['status'] != 'FILLED' and order['product_id'] == product_id:
                 return order
         return None
     
     def get_open_sell_order_for_current_position(self):
         open_orders = self.get_open_orders()
+        open_orders = [oo for oo in open_orders if oo['side'] == "SELL"] # only the sell orders
         if not open_orders:
             return None
         
-        # only the sell orders
-        open_orders = [oo for oo in open_orders if oo['side'] == "SELL"]
         order = open_orders[0]
 
         client_order_id = order['client_order_id']
@@ -318,57 +322,43 @@ class TradeHandler:
         if is_valid == False:
             return False
         
-        closed_buy_order = self.get_latest_closed_buy_order()
         open_sell_order = self.get_open_sell_order_for_current_position()
-        if open_sell_order != None:
-            if closed_buy_order != None:
-                # Is not a valid load because why would there be an open sell order
-                # if there is no closed buy order? (indicates mannual interference)
-                # ? ode: add check to make sure not buy_order['created_time'] > sell order created time
-                created_time = datetime.fromisoformat(closed_buy_order['created_time'])
-                position = Position(entry_price=closed_buy_order['average_filled_price'], \
-                        shares=closed_buy_order['filled_size'], \
-                            date=created_time, \
-                                slperc=self.model.SLPERC, tpperc=self.model.TPPERC, \
-                                    commision=None, \
-                                        short=False)
-                
-                self.current_position = [position]
-                self.model.current_position = [position]
-            
-            else:
-                # returns False because why would there be an open sell order and no closed buy order
-                return False
-        
+
+        if open_sell_order == None:
+            # theres no sell order, so self.current_position should be empty list
+            return True
         else:
-
-            # TODO: add more logic here?
-            # if an open sell order exists, a closed buy order should exist
-            # otherwise, it would indicate you can place sell orders on assets you didn't buy (unlikely)
-            # or the obtained the asset was recieved some other way
+            closed_buy_order = self.get_latest_closed_buy_order(open_sell_order['product_id'])
+            created_time = datetime.fromisoformat(closed_buy_order['created_time'])
+            position = Position(entry_price=closed_buy_order['average_filled_price'], \
+                    shares=closed_buy_order['filled_size'], \
+                        date=created_time, \
+                            slperc=self.model.SLPERC, tpperc=self.model.TPPERC, \
+                                commision=None, \
+                                    short=False)
             
-            pass
-            
-        return True
-
+            self.current_position = [position]
+            self.model.current_position = [position]
+            VM_log(f"--->trade_handler loaded a current position. shares: {str(position.shares)}, slperc: {position.slperc}, tpperc: {position.tpperc}, date: {str(position.date)}, commision: {str(position.commision)}.\n")
+            return True
 
     def handle_trade(self):
+        VM_log(f"--->trade_handler's handle_trade() function was called.\n")
+
         # TODO: This code doesn't seem to be used?
         cash = self.calculate_cash()
         if cash == None:
             print("...")
             return False
 
-        # trade_size should be under 1.0 or price fluctuations could cause
-        # buy orders to not go through
-        trade_amount = cash * self.trade_size
-
         buy_order_success = None
         sell_order_success = None
-        buy_order_success = self.buy_bitcoin(trade_amount)
+        buy_order_success = self.buy_bitcoin()
         print(f"\n\n\n------------------------------------------------\n\
               ATTEMPTED TO EXECUTE A BUY ORDER\n    ->buy_order_success: {buy_order_success}\n\
                 ------------------------------------------------\n\n\n")
+        VM_log(f"--->#### ATTEMPTED TO EXECUTE A BUY ORDER ####. buy_order_success: {buy_order_success}")
+        
         if buy_order_success == True:
             # grab the price before waiting
             btc_usdc_price = self.get_btc_price()
@@ -379,12 +369,15 @@ class TradeHandler:
             print(f"\n\n\n------------------------------------------------\n\
                   ATTEMPTED TO EXECUTE A SELL ORDER\n    ->sell_order_success: {buy_order_success}\n\
                     ------------------------------------------------\n\n\n")
+            VM_log(f"--->#### ATTEMPTED TO EXECUTE A SELL ORDER####. sell_order_success: {sell_order_success}")
+
         return buy_order_success, sell_order_success
 
     def handle_new_day(self) -> None:
         # this function triggers when a new day has arrived
         # and the btc csv has been updated with yesterday's information
         print("TradeHandler.handle_new_day() called")
+        VM_log(f"--->TradeHandler.handle_new_day() called")
         
         # If there are multiple open buy orders then either the bot 
         # did something wrong or I created buy order(s) on coinbase manually
@@ -404,18 +397,25 @@ class TradeHandler:
                 self.proceed = False
                 self.not_proceed_reason = "self.load_current_position() returned False. Not proceeding in self.hanle_day() as position was not loaded successfully."
                 raise Exception(self.not_proceed_reason)
+            
             # After refresh: If the handler is currently in a position, it should not be trading yet
             if self.current_position:
                 return
-        
+            
+            VM_log(f"---> #### trade_handler's current position was cleared #### indicating that tigger bracket sell order was executed.\n")
         else:
-            # If the handler does not have an open position
-            # but it does have an open buy order,
-            # then it should not be trading either
+            # The code reaches here only if trade_handler's current_position is empty list
+            # current_position is only set if there exists an open sell order and a closed buy order (in self.load_current_position())
+
+            # however, the code will reach here if there is an open sell order but no closed buy order
+            # this would likely be due to manually making purchases on coinbase
+
+            # the following code checks for old OPEN buy orders, and cancels them
             exists_open_buy_order = self.check_existing_open_buy_order()
             if exists_open_buy_order == True:
                 # check whether the buy order was made over 12 hours ago
                 is_expired_buy_order = self.check_should_cancel_open_buy_order()
+                VM_log("---> #### trade_handler does not have a current position (indicating no (closed buy order and open sell order)), but there exists an open buy order. #### Checking whether to cancel it.\n")
                 
                 # if the buy order is expired, it should be cancelled
                 if is_expired_buy_order == True:
@@ -439,18 +439,16 @@ class TradeHandler:
                     #print("return due to existing open buy order")
                     return
             else:
-                # Theres no open buy order
+                # The code reaches here if there is no open buy order: the expected norm
                 pass
-                
-
-            #DEL: if the code reaches here then either tl or sl has been hit. Maybe generate summary statistics? (would require knowing what the order looks like when its completed)
-            #DEL: print("Position was closed in the last 24 hours, currently no open position")
-
+            
         # self.proceed can be set to false at any time to prevent the bot from proceeding 
         if self.proceed == False:
             print("\n------------>handle_new_day(): NOT PROCEEDING:")
             raise Exception(self.not_proceed_reason)
         
+        VM_log(f"--->All safety checks passed in handle_new_day. Will be retraining model and generating signal.\n")
+
         self.model.initialize_window_signaler()
         # TODO: Determine whether to retrain the model every single day
         self.model.train_model()
@@ -466,6 +464,7 @@ class TradeHandler:
 
         # signal: 0 for pass, 1 for short, 2 for buy
         signal = self.model.btc_total_signal(idx_yesterday, is_global_index=True)
+        VM_log(f"--->The trade_handler generated the signal ({str(signal)}) for yesterday ({str(date)}).\n")
 
         # consider future selling if is good time to short, problem is no idea where the cutoffs should be yet
         if signal == 0:
@@ -478,9 +477,6 @@ class TradeHandler:
                 self.proceed = False
                 self.not_proceed_reason = "(buy_order_success, sell_order_success):" + f"({str(buy_order_success), {str(sell_order_success)}})"
                 raise Exception(self.not_proceed_reason)
-
-
-
 
         return
 

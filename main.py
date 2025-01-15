@@ -1,29 +1,18 @@
-
+from coinbase.rest import RESTClient
 from sklearn.ensemble import GradientBoostingRegressor
-from serve import perform_routine
+
 from trading_bot import TradingBot
 from trade_handler import TradeHandler
 
-from coinbase.rest import RESTClient
-
-
-def get_env(path=".env"):
-    env = {}
-    with open(path, "r") as f:
-        for line in f.readlines():
-            if not line.strip():
-                continue
-            if line[0] == "#":
-                continue
-            items = line[:-1].split("=")
-            name = items[0]
-            value = "=".join(items[1:])
-            env[name] = value
-    return env
+from serve import perform_routine
+from helpers import get_env, clear_caches
 
 
 # version of main for running the bot to trade BTC on Coinbase
 if __name__ == "__main__":
+    # clear VM_log and cached_prices text files
+    clear_caches()
+
     csv_path = 'csvs/updating_btc.csv'
     cached_prices_path = 'cached_prices.txt'
     REG = GradientBoostingRegressor(random_state=0)
@@ -44,9 +33,5 @@ if __name__ == "__main__":
                                     margin=1.0, \
                                     trade_size=0.1)
     
-    ####
-    # run tests by commenting out perform_routine() and adding code here
-    #trade_handler.handle_new_day()
-    ####
     perform_routine(csv_path, cached_prices_path, trade_handler)
 
