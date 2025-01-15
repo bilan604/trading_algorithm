@@ -1,3 +1,4 @@
+# For Coinbase authorization of IPs
 import requests
 from bs4 import BeautifulSoup
 
@@ -19,6 +20,7 @@ def get_IP():
     print(table_elements[0])
     IP = table_elements[1]
     return IP
+
 
 print(get_IP())
 

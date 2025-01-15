@@ -13,7 +13,7 @@ def update_origin():
     lines = [
         'git add .',
         'git commit -m "automated origin update"',
-        'git push origin VM_dynamic_data_test'
+        'git push origin VM_trading'
     ]
     for line in lines:
         print("update_origin bash execution():")
