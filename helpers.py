@@ -47,3 +47,40 @@ def get_btc_usd_price():
     time = obj['time']['updatedISO']
     price, time = format_price_time(btc_price, time)
     return price, time
+
+def get_IP():
+    import requests
+    from bs4 import BeautifulSoup
+
+    url = 'https://whatismyv6.com/'
+
+    resp = requests.get(url)
+    soup = BeautifulSoup(resp.content, 'html.parser')
+
+    tables = soup.find_all('table')
+    table = None
+    for tbl in list(tables):
+        if 'You are connecting with an' in tbl.text:
+            table = tbl
+            break
+
+    table_elements = table.text.strip().split("\n")    
+    print(table_elements[0])
+    IP = table_elements[1]
+    return IP
+
+def update_origin():
+    import subprocess
+
+    lines = [
+        'git add .',
+        'git commit -m "auto"',
+        'git push origin VM_trading'
+    ]
+    for line in lines:
+        print("update_origin bash execution():")
+        print('line:', line)
+        output = subprocess.run(line.strip().split(" "), capture_output=True, text=True)
+        print("output:", output.stdout)
+
+

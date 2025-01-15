@@ -12,10 +12,8 @@ def client_order_examples():
 
     from helpers import get_btc_usd_price 
 
-
     api_key = get_env()["CDP_API_KEY"]
     api_secret = get_env()["CDP_API_KEY_PRIVATE_KEY"]
-
 
     client = RESTClient(api_key=api_key, api_secret=api_secret)
     th = TradeHandler(None, client, 1.0, 0.8)
@@ -24,12 +22,10 @@ def client_order_examples():
     btc_usdc_price = float(product["price"])
     print("price 2:", btc_usdc_price)
 
-
     # example
     available_btc = th.get_crypto_value_of_asset('BTC')
     base_size = round(0.33 * available_btc, 8)
-
-
+    
     # examples of proper rounding for USDC
     limit_price = round(btc_usdc_price * (1.0 + 0.02), 2)
     stop_trigger_price = round(btc_usdc_price * (1.0 - 0.02), 2)
@@ -96,4 +92,8 @@ def client_order_examples():
 
 
     print("Finished")
+
+
+
+
 

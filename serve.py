@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime, timezone
 from helpers import get_btc_usd_price
 from trade_handler import TradeHandler
-from helpers import VM_log
+from helpers import VM_log, update_origin
 
 
 def get_seconds_difference(dt1, dt2):
@@ -123,19 +123,24 @@ def perform_routine(csv_path, cached_prices_path, trade_handler):
             should_perform = True
         if should_perform == False:    
             seconds_elapsed = get_seconds_difference(curr_time, prev_time)
-            if seconds_elapsed >= 1800:
+            if seconds_elapsed >= 180:
                 should_perform = True
         
         if should_perform:
             # logging
             VM_log(f"--->Performing routine event at {str(curr_time)}.\n")
+            # the routine event is adding the btc price to the prices seen so far today
             perform_routine_event(trade_handler, csv_path, cached_prices_path)
             prev_time = curr_time
             if prev_time == None:
                 raise Exception("perform_routine_event's prev_time is None. Will cause infinite loop. How.")
             
+            VM_log(f"--->Updating origin after performing routine event at {str(datetime.now(timezone.utc))}.\n")
+            
+            update_origin()
+        
         else:
 
-            print("sleeping for 180 seconds")
-            time.sleep(180)
+            print("sleeping for 60 seconds")
+            time.sleep(60)
 
