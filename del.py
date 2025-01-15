@@ -1,20 +1,4 @@
-
-from datetime import datetime
-
-def get_hours_difference(datetime_str1, datetime_str2):
-    # positive when datetime_str1 > datetime_str2
-    
-    # Convert the strings to datetime objects
-    dt1 = datetime.fromisoformat(datetime_str1)
-    dt2 = datetime.fromisoformat(datetime_str2)
-
-    # Calculate the difference
-    datediff = dt1 - dt2
-
-    # Get total difference in hours
-    hours_diff = (datediff.days * 24) + (datediff.seconds // 3600)
-    print("Total Hours Difference:", hours_diff)
-    return hours_diff
+# USED FOR TESTING ISOLATED CODE DURING DEVELOPMENT
 
 
 def get_env(path=".env"):
@@ -31,64 +15,131 @@ def get_env(path=".env"):
             env[name] = value
     return env
 
+from trade_handler import TradeHandler
+
+from coinbase.rest import RESTClient
+from json import dumps
 
 
+api_key = get_env()["CDP_API_KEY"]
+api_secret = get_env()["CDP_API_KEY_PRIVATE_KEY"]
 
+client = RESTClient(api_key=api_key, api_secret=api_secret)
+th = TradeHandler(None, client, 1.0, 0.8)
 
+def get_orders(self):
+    orders = self.client.list_orders()
+    orders = orders.to_dict()
+    print(orders['orders'])    
+    return orders
 
+def get_portfolio_uuid(self):
+    portfolios = self.client.get_portfolios()
+    portfolios = portfolios.to_dict()
+    for portfolio in portfolios['portfolios']:
+        if portfolio['name'] == 'Default':
+            return portfolio['uuid']
+    return None
 
+def get_portfolio_spot_positions(self, uuid):
+    portfolio = client.get_portfolio_breakdown('25b79e39-3cd0-5a5e-8a60-6a06ded7f747')
+    portfolio = portfolio.to_dict()
+    spot_positions = portfolio['breakdown']['spot_positions']
+    print(spot_positions)
+    return spot_positions
 
+portfolio = client.get_portfolio_breakdown('25b79e39-3cd0-5a5e-8a60-6a06ded7f747')
+portfolio = portfolio.to_dict()
+spot_positions = portfolio['breakdown']['spot_positions']
+for spot_position in spot_positions:
+    print("\n-------->")
+    print(spot_position)
+    # eth: 0.00027702
 
-import jwt
-from cryptography.hazmat.primitives import serialization
-import time
-import secrets
+# listing orders
+orders = th.client.list_orders()
+orders = orders.to_dict() # reverse order, index 0 is newer orders
+for order in orders['orders']:
+    print("\n----------->order:")
+    order_id = order['order_id']
+    order_side = order['side'] # 'BUY', 'SELL'
+    order_status = order['status'] # 'FILLED'
 
-key_name = get_env()["CDP_API_KEY"]
-key_secret = get_env()["CDP_API_KEY_PRIVATE_KEY"]
+####
+from btc_pricing import get_btc_usd_price 
+print("price 1:", get_btc_usd_price())
 
-def build_jwt():
-    private_key_bytes = key_secret.encode('utf-8')
-    private_key = serialization.load_pem_private_key(private_key_bytes, password=None)
+product = client.get_product("BTC-USDC")
+btc_usdc_price = float(product["price"])
+print("price 2:", btc_usdc_price)
 
-    jwt_payload = {
-        'sub': key_name,
-        'iss': "cdp",
-        'nbf': int(time.time()),
-        'exp': int(time.time()) + 120,
-    }
+available_btc = th.get_crypto_value_of_asset('BTC')
+base_size = round(0.33 * available_btc, 8)
+limit_price = round(btc_usdc_price * (1.0 + 0.02), 2)
+stop_trigger_price = round(btc_usdc_price * (1.0 - 0.02), 2)
 
-    jwt_token = jwt.encode(
-        jwt_payload,
-        private_key,
-        algorithm='ES256',
-        headers={'kid': key_name, 'nonce': secrets.token_hex()},
+def code_example_market_sell_bitcoin_into_usdc(th):
+    # tested, works
+    new_order_id = th.generate_client_order_id()
+    order = client.market_order_sell(
+        client_order_id=new_order_id,
+        product_id="BTC-USDC",
+        base_size=str(base_size)
     )
 
-    return jwt_token
+    if order['success']:
+        order_id = order['success_response']['order_id']
+        fills = client.get_fills(order_id=order_id)
+        dumps(fills.to_dict())
+    else:
+        error_response = order['error_response']
+        print(error_response)
 
-def main():
-    jwt_token = build_jwt()
+def code_example_trigger_bracket_order_gtc_sell(client, th):
+    product = client.get_product("BTC-USDC")
+    btc_usdc_price = float(product["price"])
+    print("price 2:", btc_usdc_price)
 
-    print(f"export JWT={jwt_token}")
-
-if __name__ == "__main__":
-    main()
-
-
+    available_btc = th.get_crypto_value_of_asset('BTC')
+    base_size = round(0.33 * available_btc, 8)
+    limit_price = round(btc_usdc_price * (1.0 + 0.02), 2)
+    stop_trigger_price = round(btc_usdc_price * (1.0 - 0.02), 2)
 
 
+    # trigger_bracket_order_gtc_sell:
+    # places a sell order that triggers at tp and sl
+    new_order_id = th.generate_client_order_id()
+    order = th.client.trigger_bracket_order_gtc_sell(
+        client_order_id=new_order_id,
+        product_id='BTC-USDC',
+        base_size=str(base_size),
+        limit_price=str(limit_price), # +4%
+        stop_trigger_price=str(stop_trigger_price), #-4% 
+    )
 
-import http.client
-import json
+    if order['success']:
+        order_id = order['success_response']['order_id']
+        fills = client.get_fills(order_id=order_id)
+        dumps(fills.to_dict())
+    else:
+        error_response = order['error_response']
+        print(error_response)
 
-conn = http.client.HTTPSConnection("api.coinbase.com")
-payload = ''
-headers = {
-  'Content-Type': 'application/json'
-}
-conn.request("GET", "/api/v3/brokerage/products", payload, headers)
-res = conn.getresponse()
-data = res.read()
-print(data.decode("utf-8"))
+"""
+    
+    
+    # a sell limit order can only be executed at the limit price or HIGHER
+    client.stop_limit_order_sell(
+        client_order_id=,
+        product_id=,
+        base_size=,
+        limit_price=,
+        stop_price=,
+        stop_direction=,
+    )
+"""
+
+
+
+print("Finished")
 

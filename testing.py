@@ -259,16 +259,21 @@ from sklearn.ensemble import GradientBoostingRegressor
 
 
 def run_backtest():
-    df_btc_name = 'csvs/btc_data_aggregated.csv'
+    df_btc_name = 'csvs/updating_btc.csv'
     REG = GradientBoostingRegressor(random_state=0)
-    tb = TradingBot(df_btc_name, REG, CUTOFF_LOWER=1, CUTOFF_UPPER=100, \
-                    SLPERC=0.05, TPPERC=0.05, \
-                    NP_CUTOFF_PCT=0.8, shorts=False, \
+    tb = TradingBot(df_btc_name, REG, CUTOFF_LOWER=0.7, CUTOFF_UPPER=100, \
+                    SLPERC=0.04, TPPERC=0.04, \
+                    NP_CUTOFF_PCT=0.9, shorts=False, \
                     window_sizes=[1, 3, 9, 15, 30, 60, 120, 240, 480, 960])
     df_btc_name, df_btc_backtest = tb.initialize_window_signaler_for_backtesting()
     results = backtest(tb, [df_btc_backtest], [df_btc_name], 'data_forex')
     tb.save_model(results)
     return results
+
+
+#simulate_both()
+#view_spread()
+#see_trade_frequency_and_precision()
 
 
 #if __name__ == '__main__':
@@ -284,6 +289,3 @@ def run_backtest():
     #view_spread()
 
 
-#simulate_both()
-view_spread()
-#see_trade_frequency_and_precision()
