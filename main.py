@@ -48,15 +48,3 @@ if __name__ == "__main__":
 
 
 
-#if __name__ == '__main__':
-    # using the backtest library, comparison of my trading algorithm v.s. michael harris trading method
-    #results = run_backtest()
-    # compares XGBot against highest returning bot of 1000 randomly trading bots
-    #multitest()
-    # simulates trading with Michael Harris indicator
-    #simulate_michael_harris()
-    # compares XGBot against randomly trading bot
-    #simulate_both()
-    # min, max, and average stats of 35 XGBots on different train/test split sizes
-    #view_spread()
-    

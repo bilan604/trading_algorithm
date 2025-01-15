@@ -53,8 +53,6 @@ def generic_check(th):
     print("cash (USDC):", cash)  # Cash available (USDC)
     
 
-
-
 def check_should_cancel_buy_position(self):
     # TODO: put this in th
     # TODO: add cancelling buy position
@@ -69,3 +67,18 @@ def check_should_cancel_buy_position(self):
         #cancel buy position
         pass
 
+
+
+
+api_key = get_env()["CDP_API_KEY"]
+api_secret = get_env()["CDP_API_KEY_PRIVATE_KEY"]
+client = RESTClient(api_key=api_key, api_secret=api_secret)
+orders = client.list_orders()
+print(orders)
+th = TradeHandler(None, client, 1.0, 0.8)
+generic_check(th)
+
+
+
+
+print("DONE")

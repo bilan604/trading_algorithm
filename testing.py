@@ -271,6 +271,11 @@ def run_backtest():
     return results
 
 
+#simulate_both()
+#view_spread()
+#see_trade_frequency_and_precision()
+
+
 #if __name__ == '__main__':
     # using the backtest library, comparison of my trading algorithm v.s. michael harris trading method
     #results = run_backtest()
@@ -284,6 +289,3 @@ def run_backtest():
     #view_spread()
 
 
-#simulate_both()
-view_spread()
-#see_trade_frequency_and_precision()
