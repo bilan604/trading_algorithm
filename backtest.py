@@ -234,7 +234,7 @@ def backtest(tb, additional_dfs, additional_df_names, control_folder_name):
     heatmaps = []
 
     for df in dataframes:
-        bt = Backtest(df, MyStrat, cash=200000, margin=1/5, commission=0.0002)
+        bt = Backtest(df, MyStrat, cash=10000000, margin=1/5, commission=0.0002)
         stats, heatmap = bt.optimize(slperc=[i/100 for i in range(1, 8)],
                                     tpperc=[i/100 for i in range(1, 8)],
                         maximize='Return [%]', max_tries=3000,

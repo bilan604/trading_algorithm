@@ -34,4 +34,3 @@ if __name__ == "__main__":
                                     trade_size=0.1)
     
     perform_routine(csv_path, cached_prices_path, trade_handler)
-
