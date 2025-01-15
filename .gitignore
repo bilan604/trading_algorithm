@@ -1,3 +1,4 @@
 .env
+myenv/
 VM_logs.txt
 cached_prices.txt
