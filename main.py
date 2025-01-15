@@ -22,21 +22,6 @@ def get_env(path=".env"):
     return env
 
 
-# Version of main for running main.py to test
-if __name__ == '__main__':
-    from testing import *
-    # using the backtest library, comparison of my trading algorithm v.s. michael harris trading method
-    results = run_backtest()
-    # compares XGBot against highest returning bot of 1000 randomly trading bots
-    #multitest()
-    # simulates trading with Michael Harris indicator
-    #simulate_michael_harris()
-    # compares XGBot against randomly trading bot
-    #simulate_both()
-    # min, max, and average stats of 35 XGBots on different train/test split sizes
-    #view_spread()
-
-"""
 # version of main for running the bot to trade BTC on Coinbase
 if __name__ == "__main__":
     csv_path = 'csvs/updating_btc.csv'
@@ -64,4 +49,4 @@ if __name__ == "__main__":
     #trade_handler.handle_new_day()
     ####
     perform_routine(csv_path, cached_prices_path, trade_handler)
-"""
+

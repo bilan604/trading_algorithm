@@ -109,8 +109,8 @@ def perform_routine(csv_path, cached_prices_path, trade_handler):
         curr_time = datetime.now(timezone.utc)
         seconds_elapsed = get_seconds_difference(curr_time, prev_time)
         if seconds_elapsed <= 3600:
-            print("sleeping for 600 seconds")
-            time.sleep(120)
+            print("sleeping for 180 seconds")
+            time.sleep(180)
         else:
             perform_routine_event(trade_handler, csv_path, cached_prices_path)
             prev_time = curr_time
