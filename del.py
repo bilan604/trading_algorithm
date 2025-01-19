@@ -44,3 +44,5 @@ print("resp:", resp)
 print("END TEST")
 
 """
+import os
+print(os.getcwd())
