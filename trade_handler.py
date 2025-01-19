@@ -147,8 +147,7 @@ class TradeHandler:
             order_id = order['success_response']['order_id']
             btc_usdc_price = self.get_btc_price()
             side = 'BUY'
-            commision_pct = ((order['average_filled_price'] - btc_usdc_price) / btc_usdc_price) * 100.0
-            self.log_order(order_id, side, btc_usdc_price, None, None, None, commision_pct)
+            self.log_order(order_id, side, btc_usdc_price, None, None, None, None)
 
             #fills = self.client.get_fills(order_id=order_id)
             #dumps(fills.to_dict())
@@ -169,6 +168,7 @@ class TradeHandler:
         # trigger_bracket_order_gtc_sell:
         # places a sell order that triggers at tp and sl
         available_btc = self.get_crypto_value_of_asset("BTC")
+        base_size = base_size * 0.95
         base_size = round(available_btc, 8)
         
         limit_price = btc_usdc_price * (1.0 + self.model.TPPERC)

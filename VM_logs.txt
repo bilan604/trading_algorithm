@@ -1,4 +1,1 @@
---->Performing routine event at 2025-01-19 22:21:45.814727+00:00.
---->Current time was not a new day from cached_prices, or, cached_prices was empty.
---->adding entry to cached prices - price: 105108.183, time: 2025-01-19T22:21:27+00:00
---->Updating origin after performing routine event at 2025-01-19 22:21:46.605304+00:00.
+--->Trade handler buy_bitcoin() called. Amount of BTC in USDC it will be buying: 1.29

@@ -1,0 +1,1 @@
+{"order_id": "fd0de4bc-9bbe-4dba-99ab-43d212570c23", "side": "SELL", "btc_usdc_price": "103966.79", "limit_price": "108125.46", "stop_trigger_price": "99808.12", "comission_pct": "None", "updatedISO": "2025-01-19T22:28:57.837225+00:00"}
