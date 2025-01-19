@@ -127,8 +127,10 @@ def VM_log(s, file_path='VM_logs.txt'):
         if s and s[-1] != "\n":
             s += "\n"
         f.write(s)
-    VM_log_copy(s)
-
+    try:
+        VM_log_copy(s)
+    except:
+        print("VM_LOG_COPY ERR")
 
 
 print(get_IP())

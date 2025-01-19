@@ -866,4 +866,41 @@ update_origin bash execution():
 line: git config --global user.name "bilan604"
 output: 
 update_origin bash execution():
-line: 
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test aeb2f4c] "auto"
+ 3 files changed, 264 insertions(+)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+Traceback (most recent call last):
+  File "/home/bilan604gm/trading_algorithm/main.py", line 36, in <module>
+    perform_routine(csv_path, cached_prices_path, trade_handler)
+  File "/home/bilan604gm/trading_algorithm/serve.py", line 133, in perform_routine
+    VM_log(f"--->Performing routine event at {str(curr_time)}.\n")
+  File "/home/bilan604gm/trading_algorithm/helpers.py", line 130, in VM_log
+    VM_log_copy(s)
+  File "/home/bilan604gm/trading_algorithm/helpers.py", line 107, in VM_log_copy
+    resp = use_api_dev(pars)
+           ^^^^^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/helpers.py", line 25, in use_api_dev
+    return json.loads(resp)["message"]
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 2 column 1 (char 1)
