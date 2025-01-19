@@ -31,6 +31,10 @@ def load_cached_prices(path):
             objs.append(obj)
     return objs
 
+def clear_cached_prices(path):
+    with open(path, "w+") as f:
+        pass
+
 def is_new_day_from_cached_prices(path):
     dt1 = datetime.now(timezone.utc)
     cached_prices = load_cached_prices(path)
@@ -87,9 +91,7 @@ def update_btc_csv(csv_path, cached_prices_path):
     
     concat_data_to_dataframe(csv_path, data)
 
-    # clear cache
-    with open(cached_prices_path, "w+") as f:
-        pass
+    clear_cached_prices(cached_prices_path)
 
     # add first of the day (open) to cache
     price, time = get_btc_usd_price()

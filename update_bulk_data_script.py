@@ -44,8 +44,7 @@ def append_coinmarketcap_data_to_updating_btc_csv(coinmarketcap_name, updating_b
     df_concat = pd.concat([df_updating, df_2], ignore_index=True)
     df_concat.to_csv(updating_btc_csv_name, index=False)
 
-
 # update the updating_btc.csv file with csv downloaded from https://coinmarketcap.com/currencies/bitcoin/historical-data/
-#coinmarketcap_name = "Bitcoin_11_14_2024-1_15_2025_historical_data_coinmarketcap.csv"
-#updating_btc_csv_name = "csvs/updating_btc.csv"
-#append_coinmarketcap_data_to_updating_btc_csv(coinmarketcap_name, updating_btc_csv_name)
+coinmarketcap_name = "Bitcoin_11_18_2024-1_19_2025_historical_data_coinmarketcap.csv"
+updating_btc_csv_name = "csvs/updating_btc.csv"
+append_coinmarketcap_data_to_updating_btc_csv(coinmarketcap_name, updating_btc_csv_name)

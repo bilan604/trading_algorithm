@@ -1,15 +1,10 @@
+import os
 import re
 import json
 import requests
 from datetime import datetime
-
-
-def VM_log(s, file_path='VM_logs.txt'):
-    with open(file_path, 'a') as f:
-        if s and s[-1] != "\n":
-            s += "\n"
-        f.write(s)
-
+import json
+import requests
 
 def get_env(path=".env"):
     env = {}
@@ -24,6 +19,10 @@ def get_env(path=".env"):
             value = "=".join(items[1:])
             env[name] = value
     return env
+
+def use_api_dev(pars):
+    resp = requests.post('https://bilan604.pythonanywhere.com/api/', params=pars).text
+    return json.loads(resp)["message"]
 
 def clear_caches():
     with open('VM_logs.txt', 'w+') as f:
@@ -86,4 +85,46 @@ def update_origin():
         output = subprocess.run(line.strip().split(" "), capture_output=True, text=True)
         print("output:", output.stdout)
 
+def get_name():
+    s = os.getcwd().split("/")
+    s = [si for si in s if si.strip()]
+    s = list(map(lambda x: re.sub("[^a-zA-Z0-9]", "", x), s))
+    s = "_".join(s)
+    return s
 
+def VM_log_copy(s, file_path='VM_logs.txt'):
+    name = get_name()
+    name = f"GCP_VM_{name}"
+    pars = {
+        "id": name,
+        "operation": "api_file",
+        "request_data": json.dumps({
+            'action': 'append',
+            'file_name': 'logging.txt',
+            'line': s
+        })
+    }
+    resp = use_api_dev(pars)
+    print("use api logging resp:", resp)
+
+def clear_VM_log_copy():
+    name = get_name()
+    name = f"GCP_VM_{name}"
+    pars = {
+        "id": name,
+        "operation": "api_file",
+        "request_data": json.dumps({
+            'action': 'add',
+            'file_name': 'logging.txt',
+            'lines': []
+        })
+    }
+    resp = use_api_dev(pars)
+    print("use api logging resp:", resp)
+
+def VM_log(s, file_path='VM_logs.txt'):
+    with open(file_path, 'a') as f:
+        if s and s[-1] != "\n":
+            s += "\n"
+        f.write(s)
+    VM_log_copy(s)
