@@ -128,3 +128,8 @@ def VM_log(s, file_path='VM_logs.txt'):
             s += "\n"
         f.write(s)
     VM_log_copy(s)
+
+
+
+print(get_IP())
+
