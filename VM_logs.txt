@@ -7709,3 +7709,7 @@
 --->All safety checks passed in handle_new_day. Will be retraining model and generating signal.
 --->The trade_handler generated the signal (0) for yesterday (2025-01-18 00:00:00).
 --->Updating origin after performing routine event at 2025-01-24 00:01:08.909977+00:00.
+--->Performing routine event at 2025-01-24 00:04:09.302688+00:00.
+--->Current time was not a new day from cached_prices, or, cached_prices was empty.
+--->adding entry to cached prices - price: 103748.853, time: 2025-01-24T00:03:52+00:00
+--->Updating origin after performing routine event at 2025-01-24 00:04:09.641509+00:00.
