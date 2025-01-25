@@ -9617,3 +9617,10 @@
 --->Current time was not a new day from cached_prices, or, cached_prices was empty.
 --->adding entry to cached prices - price: 104020.295, time: 2025-01-24T23:58:13+00:00
 --->Updating origin after performing routine event at 2025-01-24 23:58:32.108186+00:00.
+--->Performing routine event at 2025-01-25 00:01:32.483282+00:00.
+--->Current time is a new day from times that were in cached_prices.txt. Cached has been cleared.
+--->There are now 3711 entries in csvs/updating_btc.csv. The last date in csvs/updating_btc.csv is 2025-1-24 00:00:00.
+--->TradeHandler.handle_new_day() called
+--->All safety checks passed in handle_new_day. Will be retraining model and generating signal.
+--->The trade_handler generated the signal (0) for yesterday (2025-01-18 00:00:00).
+--->Updating origin after performing routine event at 2025-01-25 00:01:35.450841+00:00.
