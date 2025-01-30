@@ -20391,3 +20391,7 @@
 --->Current time was not a new day from cached_prices, or, cached_prices was empty.
 --->adding entry to cached prices - price: 106078.74, time: 2025-01-30T15:00:25+00:00
 --->Updating origin after performing routine event at 2025-01-30 15:00:29.509600+00:00.
+--->Performing routine event at 2025-01-30 15:03:29.940754+00:00.
+--->Current time was not a new day from cached_prices, or, cached_prices was empty.
+--->adding entry to cached prices - price: 106008.927, time: 2025-01-30T15:03:15+00:00
+--->Updating origin after performing routine event at 2025-01-30 15:03:30.277028+00:00.
