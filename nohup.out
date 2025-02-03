@@ -186657,3 +186657,267 @@ output:
 update_origin bash execution():
 line: git config --global user.name "bilan604"
 output: 
+update_origin bash execution():
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test 525d1672] "auto"
+ 3 files changed, 271 insertions(+), 1 deletion(-)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+update_origin bash execution():
+line: git config --global user.email "bilan604@yahoo.com"
+output: 
+update_origin bash execution():
+line: git config --global user.name "bilan604"
+output: 
+update_origin bash execution():
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test f3c59823] "auto"
+ 2 files changed, 5 insertions(+)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+update_origin bash execution():
+line: git config --global user.email "bilan604@yahoo.com"
+output: 
+update_origin bash execution():
+line: git config --global user.name "bilan604"
+output: 
+update_origin bash execution():
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test 2f957a03] "auto"
+ 2 files changed, 5 insertions(+)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+update_origin bash execution():
+line: git config --global user.email "bilan604@yahoo.com"
+output: 
+update_origin bash execution():
+line: git config --global user.name "bilan604"
+output: 
+update_origin bash execution():
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test 3afc9fed] "auto"
+ 2 files changed, 5 insertions(+)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+update_origin bash execution():
+line: git config --global user.email "bilan604@yahoo.com"
+output: 
+update_origin bash execution():
+line: git config --global user.name "bilan604"
+output: 
+update_origin bash execution():
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test a0548103] "auto"
+ 2 files changed, 5 insertions(+)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+update_origin bash execution():
+line: git config --global user.email "bilan604@yahoo.com"
+output: 
+update_origin bash execution():
+line: git config --global user.name "bilan604"
+output: 
+update_origin bash execution():
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test facacd04] "auto"
+ 2 files changed, 5 insertions(+)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+update_origin bash execution():
+line: git config --global user.email "bilan604@yahoo.com"
+output: 
+update_origin bash execution():
+line: git config --global user.name "bilan604"
+output: 
+update_origin bash execution():
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test 47c08847] "auto"
+ 2 files changed, 5 insertions(+)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+update_origin bash execution():
+line: git config --global user.email "bilan604@yahoo.com"
+output: 
+update_origin bash execution():
+line: git config --global user.name "bilan604"
+output: 
+update_origin bash execution():
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test 04728dbe] "auto"
+ 2 files changed, 5 insertions(+)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+update_origin bash execution():
+line: git config --global user.email "bilan604@yahoo.com"
+output: 
+update_origin bash execution():
+line: git config --global user.name "bilan604"
+output: 
+update_origin bash execution():
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test 50e344df] "auto"
+ 2 files changed, 5 insertions(+)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+update_origin bash execution():
+line: git config --global user.email "bilan604@yahoo.com"
+output: 
+update_origin bash execution():
+line: git config --global user.name "bilan604"
+output: 
+update_origin bash execution():
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test fda23b86] "auto"
+ 2 files changed, 5 insertions(+)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
