@@ -268494,3 +268494,5 @@ mean: 0.008545345059609109, std_dev: 0.02659710001996892
 Xi (Prediction Row): [[1.         0.98532301 0.94068779 0.93672077 0.92710147 0.93541616
   0.80416139 0.70122856 0.58555942 0.40598138]]
 Date: 2025-01-18 00:00:00
+/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/sklearn/ensemble/_gb.py:672: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)  # TODO: Is this still required?
