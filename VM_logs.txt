@@ -42402,3 +42402,10 @@
 --->All safety checks passed in handle_new_day. Will be retraining model and generating signal.
 --->The trade_handler generated the signal (0) for yesterday (2025-01-18 00:00:00).
 --->Updating origin after performing routine event at 2025-02-09 09:22:34.506912+00:00.
+--->Performing routine event at 2025-02-09 09:25:35.024474+00:00.
+--->Current time is a new day from times that were in cached_prices.txt. Cached has been cleared.
+--->There are now 4854 entries in csvs/updating_btc.csv. The last date in csvs/updating_btc.csv is 2025-2-6 00:00:00.
+--->TradeHandler.handle_new_day() called
+--->All safety checks passed in handle_new_day. Will be retraining model and generating signal.
+--->The trade_handler generated the signal (0) for yesterday (2025-01-18 00:00:00).
+--->Updating origin after performing routine event at 2025-02-09 09:25:37.442367+00:00.
