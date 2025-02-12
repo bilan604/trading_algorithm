@@ -340157,3 +340157,217 @@ output:
   y = column_or_1d(y, warn=True)  # TODO: Is this still required?
 /home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/sklearn/ensemble/_gb.py:672: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
   y = column_or_1d(y, warn=True)  # TODO: Is this still required?
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+TradeHandler.handle_new_day() called
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+REMAINING_VALUE: 371 (the amount of data not used for training)
+---------------------->
+Training model (fitting the regresor)
+<----------------------
+Score: -0.09487052190050438
+mean: 0.008545345059609109, std_dev: 0.02659710001996892
+
+------------------------------->handle_new_day():
+Xi (Prediction Row): [[1.         0.98532301 0.94068779 0.93672077 0.92710147 0.93541616
+  0.80416139 0.70122856 0.58555942 0.40598138]]
+Date: 2025-01-18 00:00:00
+idx_yesterday (prediction index on dataframe): 3704
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+update_origin bash execution():
+line: git config --global user.email "bilan604@yahoo.com"
+output: 
+update_origin bash execution():
+line: git config --global user.name "bilan604"
+output: 
+update_origin bash execution():
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test ec8faf6e] "auto"
+ 3 files changed, 246 insertions(+)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+TradeHandler.handle_new_day() called
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+REMAINING_VALUE: 371 (the amount of data not used for training)
+---------------------->
+Training model (fitting the regresor)
+<----------------------
+Score: -0.09487052190050438
+mean: 0.008545345059609109, std_dev: 0.02659710001996892
+
+------------------------------->handle_new_day():
+Xi (Prediction Row): [[1.         0.98532301 0.94068779 0.93672077 0.92710147 0.93541616
+  0.80416139 0.70122856 0.58555942 0.40598138]]
+Date: 2025-01-18 00:00:00
+idx_yesterday (prediction index on dataframe): 3704
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+update_origin bash execution():
+line: git config --global user.email "bilan604@yahoo.com"
+output: 
+update_origin bash execution():
+line: git config --global user.name "bilan604"
+output: 
+update_origin bash execution():
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test 905c51f9] "auto"
+ 3 files changed, 10 insertions(+)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+TradeHandler.handle_new_day() called
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+REMAINING_VALUE: 371 (the amount of data not used for training)
+---------------------->
+Training model (fitting the regresor)
+<----------------------
+Score: -0.09487052190050438
+mean: 0.008545345059609109, std_dev: 0.02659710001996892
+
+------------------------------->handle_new_day():
+Xi (Prediction Row): [[1.         0.98532301 0.94068779 0.93672077 0.92710147 0.93541616
+  0.80416139 0.70122856 0.58555942 0.40598138]]
+Date: 2025-01-18 00:00:00
+idx_yesterday (prediction index on dataframe): 3704
+use api logging resp: Completed Successfully
+use api logging resp: Completed Successfully
+update_origin bash execution():
+line: git config --global user.email "bilan604@yahoo.com"
+output: 
+update_origin bash execution():
+line: git config --global user.name "bilan604"
+output: 
+update_origin bash execution():
+line: git config --global user.password "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"
+output: 
+update_origin bash execution():
+line: git add .
+output: 
+update_origin bash execution():
+line: git commit -m "auto"
+output: [VM_dynamic_data_test 2b08ef6c] "auto"
+ 3 files changed, 10 insertions(+)
+
+update_origin bash execution():
+line: git push origin VM_trading
+output: 
+sleeping for 60 seconds
+sleeping for 60 seconds
+sleeping for 60 seconds
+use api logging resp: Completed Successfully
+Traceback (most recent call last):
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/urllib3/connection.py", line 741, in connect
+    sock_and_verified = _ssl_wrap_socket_and_match_hostname(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/urllib3/connection.py", line 920, in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+               ^^^^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/urllib3/util/ssl_.py", line 460, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/urllib3/util/ssl_.py", line 504, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/ssl.py", line 517, in wrap_socket
+    return self.sslsocket_class._create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/ssl.py", line 1108, in _create
+    self.do_handshake()
+  File "/usr/lib/python3.11/ssl.py", line 1379, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLError: [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:992)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+urllib3.exceptions.SSLError: [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:992)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/requests/adapters.py", line 667, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/urllib3/util/retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='api.coindesk.com', port=443): Max retries exceeded with url: /v1/bpi/currentprice.json (Caused by SSLError(SSLError(1, '[SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:992)')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bilan604gm/trading_algorithm/main.py", line 36, in <module>
+    perform_routine(csv_path, cached_prices_path, trade_handler)
+  File "/home/bilan604gm/trading_algorithm/serve.py", line 135, in perform_routine
+    perform_routine_event(trade_handler, csv_path, cached_prices_path)
+  File "/home/bilan604gm/trading_algorithm/serve.py", line 109, in perform_routine_event
+    updated = update_btc_csv(csv_path, cached_prices_path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/serve.py", line 97, in update_btc_csv
+    price, time = get_btc_usd_price()
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/helpers.py", line 42, in get_btc_usd_price
+    resp = requests.get(url)
+           ^^^^^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/requests/api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bilan604gm/trading_algorithm/myenv/lib/python3.11/site-packages/requests/adapters.py", line 698, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: HTTPSConnectionPool(host='api.coindesk.com', port=443): Max retries exceeded with url: /v1/bpi/currentprice.json (Caused by SSLError(SSLError(1, '[SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:992)')))
